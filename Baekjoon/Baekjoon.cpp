@@ -6,25 +6,24 @@ int main()
 	ios_base::sync_with_stdio(0);
 	cin.tie(0); cout.tie(0);
 
-	for (int i = 0; i < 3; ++i)
-	{
-		int sum = 0;
-		for (int j = 0; j < 4; ++j)
-		{
-			int t;
-			cin >> t;
-			sum += t;
-		}
+	int sum = 0;
+	int minV = 100;
 
-		if (sum == 0)
-			cout << "D\n";
-		else if (sum == 1)
-			cout << "C\n";
-		else if (sum == 2)
-			cout << "B\n";
-		else if (sum == 3)
-			cout << "A\n";
-		else if (sum == 4)
-			cout << "E\n";
+	for (int i = 0; i < 7; ++i)
+	{
+		int t;
+		cin >> t;
+		if (t % 2 == 1)
+		{
+			sum += t;
+
+			if (t < minV)
+				minV = t;
+		}
 	}
+
+	if (sum == 0)
+		cout << -1;
+	else
+		cout << sum << '\n' << minV;
 }
