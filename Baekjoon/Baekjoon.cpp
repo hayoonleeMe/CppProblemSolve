@@ -7,23 +7,12 @@ int main()
 	cin.tie(0); cout.tie(0);
 
 	int sum = 0;
-	int minV = 100;
-
-	for (int i = 0; i < 7; ++i)
+	int arr[5];
+	for (int i = 0; i < 5; ++i)
 	{
-		int t;
-		cin >> t;
-		if (t % 2 == 1)
-		{
-			sum += t;
-
-			if (t < minV)
-				minV = t;
-		}
+		cin >> arr[i];
+		sum += arr[i];
 	}
-
-	if (sum == 0)
-		cout << -1;
-	else
-		cout << sum << '\n' << minV;
+	sort(arr, arr + 5);
+	cout << sum / 5 << '\n' << arr[2];
 }
