@@ -5,11 +5,23 @@ int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	int arr[9];
-	for (int i = 0; i < 9; ++i)
-		cin >> arr[i];
-	
-	// max_element
-	cout << *max_element(arr, arr + 9) << '\n';
-	cout << max_element(arr, arr + 9) - arr + 1;
+	int arr[21];
+
+	for (int i = 1; i <= 20; ++i)
+		arr[i] = i;
+
+	for (int i = 0; i < 10; ++i)
+	{
+		int a, b;
+		cin >> a >> b;
+
+		// [a, b)
+		reverse(arr + a, arr + b + 1);
+		/*int c = (b - a + 1) / 2;
+		for (int j = 0; j < c; ++j)
+			swap(arr[a + j], arr[b - j]);*/
+	}
+
+	for (int i = 1; i <= 20; ++i)
+		cout << arr[i] << ' ';
 }
