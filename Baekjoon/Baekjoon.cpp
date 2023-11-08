@@ -1,24 +1,36 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
+int N;
+int arr[20];
+
+int Func(int interval, int cost)
+{
+	int ret = 0;
+	for (int i = 0; i < N; ++i)
+	{
+		int c = (arr[i] / interval + 1) * cost;
+		ret += c;
+	}
+
+	return ret;
+}
+
 int main()
 {
-	ios_base::sync_with_stdio(0);
-	cin.tie(0); cout.tie(0);
+	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	long long A, B;
-	cin >> A >> B;
+	cin >> N;
+	for (int i = 0; i < N; ++i)
+		cin >> arr[i];
 
-	if (A > B)
-		swap(A, B);
-	else if (A == B)
-	{
-		cout << 0;
-		return 0;
-	}
-	
-	cout << B - A - 1 << '\n';
+	int Y = Func(30, 10);
+	int M = Func(60, 15);
 
-	for (long long i = A + 1; i < B; ++i)
-		cout << i << ' ';
+	if (Y < M)
+		cout << "Y " << Y;
+	else if (M < Y)
+		cout << "M " << M;
+	else
+		cout << "Y M " << Y;
 }
