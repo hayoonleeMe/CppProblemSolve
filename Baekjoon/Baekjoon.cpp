@@ -6,21 +6,25 @@ int main()
 	ios_base::sync_with_stdio(0);
 	cin.tie(0); cout.tie(0);
 
-	int arr[3];
 	for (int i = 0; i < 3; ++i)
-		cin >> arr[i];
-	sort(arr, arr + 3);
+	{
+		int sum = 0;
+		for (int j = 0; j < 4; ++j)
+		{
+			int t;
+			cin >> t;
+			sum += t;
+		}
 
-	int c = 1;
-	if (arr[1] == arr[0])
-		++c;
-	if (arr[1] == arr[2])
-		++c;
-
-	if (c == 3)
-		cout << 10000 + arr[1] * 1000;
-	else if (c == 2)
-		cout << 1000 + arr[1] * 100;
-	else if (c == 1)
-		cout << arr[2] * 100;
+		if (sum == 0)
+			cout << "D\n";
+		else if (sum == 1)
+			cout << "C\n";
+		else if (sum == 2)
+			cout << "B\n";
+		else if (sum == 3)
+			cout << "A\n";
+		else if (sum == 4)
+			cout << "E\n";
+	}
 }
