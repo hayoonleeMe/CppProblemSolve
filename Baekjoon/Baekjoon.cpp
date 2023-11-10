@@ -3,7 +3,6 @@ using namespace std;
 
 int N, X;
 int seq[100000];
-int arr[2000000];
 
 int main()
 {
@@ -14,18 +13,23 @@ int main()
 		cin >> seq[i];
 	cin >> X;
 
-	int count = 0;
-	for (int i = 0; i < N; ++i)
+	sort(seq, seq + N);
+
+	int count = 0, left = 0, right = N - 1;
+	while (left < right)
 	{
-		int n = seq[i];
-		if (n >= X)
-			continue;
-
-		if (arr[X - n])
+		int sum = seq[left] + seq[right];
+		if (sum == X)
+		{
 			++count;
-
-		arr[n] = 1;
+			++left;
+			--right;
+		}
+		else if (sum > X)
+			--right;
+		else if (sum < X)
+			++left;
 	}
 
 	cout << count;
-}	
+}
