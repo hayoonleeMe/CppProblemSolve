@@ -1,34 +1,33 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, X;
-int seq[100000];
+int N, K;
+int arr[7][2];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
+	cin >> N >> K;
 	for (int i = 0; i < N; ++i)
-		cin >> seq[i];
-	cin >> X;
-
-	sort(seq, seq + N);
-
-	int count = 0, left = 0, right = N - 1;
-	while (left < right)
 	{
-		int sum = seq[left] + seq[right];
-		if (sum == X)
+		int s, y;
+		cin >> s >> y;
+		++arr[y][s];
+	}
+
+	int count = 0;
+	for (int y = 1; y <= 6; ++y)
+	{
+		for (int s = 0; s <= 1; ++s)
 		{
-			++count;
-			++left;
-			--right;
+			if (arr[y][s] == 0)
+				continue;
+
+			count += arr[y][s] / K;
+			if (arr[y][s] % K)
+				++count;
 		}
-		else if (sum > X)
-			--right;
-		else if (sum < X)
-			++left;
 	}
 
 	cout << count;
