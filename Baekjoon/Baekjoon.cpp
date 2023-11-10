@@ -1,28 +1,26 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int alpha1[26], alpha2[26];
+int N, K;
+int arr[11];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	string s1, s2;
-	cin >> s1 >> s2;
-
-	for (char c : s1)
-		++alpha1[c - 'a'];
-
-	for (char c : s2)
-		++alpha2[c - 'a'];
+	cin >> N >> K;
+	for (int i = 1; i <= N; ++i)
+		cin >> arr[i];
 
 	int count = 0;
-	for (int i = 0; i < 26; ++i)
-		if (alpha1[i] >= alpha2[i])
-			count += alpha1[i] - alpha2[i];
-	for (int i = 0; i < 26; ++i)
-		if (alpha2[i] >= alpha1[i])
-			count += alpha2[i] - alpha1[i];
+	for (int i = N; i > 0; --i)
+	{
+		if (K / arr[i] == 0)
+			continue;
+
+		count += K / arr[i];
+		K = K % arr[i];
+	}
 
 	cout << count;
 }
