@@ -1,34 +1,48 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, K;
-int arr[7][2];
+int N;
+int arr1[26];
+int arr2[26];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> K;
+	cin >> N;
+
 	for (int i = 0; i < N; ++i)
 	{
-		int s, y;
-		cin >> s >> y;
-		++arr[y][s];
-	}
+		memset(arr1, 0, sizeof(arr1));
+		memset(arr2, 0, sizeof(arr2));
 
-	int count = 0;
-	for (int y = 1; y <= 6; ++y)
-	{
-		for (int s = 0; s <= 1; ++s)
+		string s1, s2;
+		cin >> s1 >> s2;
+
+		if (s1.size() != s2.size())
 		{
-			if (arr[y][s] == 0)
-				continue;
-
-			count += arr[y][s] / K;
-			if (arr[y][s] % K)
-				++count;
+			cout << "Impossible\n";
+			continue;
 		}
-	}
 
-	cout << count;
+		for (char c : s1)
+			++arr1[c - 'a'];
+
+		for (char c : s2)
+			++arr2[c - 'a'];
+
+		bool isPossible = true;
+		for (char c : s2)
+		{
+			if (arr2[c - 'a'] != arr1[c - 'a'])
+			{
+				cout << "Impossible\n";
+				isPossible = false;
+				break;
+			}
+		}
+
+		if (isPossible)
+			cout << "Possible\n";
+	}
 }
