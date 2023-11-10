@@ -1,24 +1,23 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-// 전역에 배열을 선언하면 0으로 초기화됨
-int alpha[26];
+int num[10];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	/*int alpha[26];
-	int alpha[26] = {};
-	fill(alpha, alpha + 26, 0);
-	memset(alpha, 0, sizeof(alpha));*/
+	int mul = 1;
+	for (int i = 0; i < 3; ++i)
+	{
+		int t; cin >> t;
+		mul *= t;
+	}
+	string s = to_string(mul);
 
-	string s;
-	cin >> s;
+	for (char c : s)
+		++num[c - '0'];
 
-	for (int i = 0; i < s.size(); ++i)
-		++alpha[int(s[i] - 'a')];
-
-	for (int i = 0; i < 26; ++i)
-		cout << alpha[i] << ' ';
+	for (int i = 0; i < 10; ++i)
+		cout << num[i] << '\n';
 }
