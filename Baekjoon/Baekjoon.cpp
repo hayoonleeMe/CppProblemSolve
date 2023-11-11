@@ -1,47 +1,32 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-list<char> str;
-int M;
+int N, K;
+list<int> seq;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	string s;
-	cin >> s;
-	for (char c : s)
-		str.push_back(c);
-	cin >> M;
-
-	list<char>::iterator cursor = str.end();
-	for (int i = 0; i < M; ++i)
+	cin >> N >> K;
+	for (int i = 1; i <= N; ++i)
+		seq.push_back(i);
+	
+	list<int>::iterator c = seq.begin();
+	cout << "<";
+	while (seq.size() > 1)
 	{
-		char c;
-		cin >> c;
-
-		switch (c)
+		for (int j = 0; j < K - 1; ++j)
 		{
-		case 'L':
-			if (cursor != str.begin())
-				--cursor;	
-			break;
-		case 'D':
-			if (cursor != str.end())
-				++cursor;
-			break;
-		case 'B':
-			if (cursor != str.begin())
-				cursor = str.erase(--cursor);
-			break;
-		case 'P':
-			char data;
-			cin >> data;
-			str.insert(cursor, data);
-			break;
+			++c;
+			if (c == seq.end())
+				c = seq.begin();
 		}
-	}
 
-	for (auto c : str)
-		cout << c;
+		cout << *c << ", ";
+		c = seq.erase(c);
+		if (c == seq.end())
+			c = seq.begin();
+	}
+	cout << *c << ">";
 }
