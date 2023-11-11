@@ -1,26 +1,47 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, K;
-int arr[11];
+list<char> str;
+int M;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> K;
-	for (int i = 1; i <= N; ++i)
-		cin >> arr[i];
+	string s;
+	cin >> s;
+	for (char c : s)
+		str.push_back(c);
+	cin >> M;
 
-	int count = 0;
-	for (int i = N; i > 0; --i)
+	list<char>::iterator cursor = str.end();
+	for (int i = 0; i < M; ++i)
 	{
-		if (K / arr[i] == 0)
-			continue;
+		char c;
+		cin >> c;
 
-		count += K / arr[i];
-		K = K % arr[i];
+		switch (c)
+		{
+		case 'L':
+			if (cursor != str.begin())
+				--cursor;	
+			break;
+		case 'D':
+			if (cursor != str.end())
+				++cursor;
+			break;
+		case 'B':
+			if (cursor != str.begin())
+				cursor = str.erase(--cursor);
+			break;
+		case 'P':
+			char data;
+			cin >> data;
+			str.insert(cursor, data);
+			break;
+		}
 	}
 
-	cout << count;
+	for (auto c : str)
+		cout << c;
 }
