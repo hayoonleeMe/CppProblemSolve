@@ -1,51 +1,29 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
+int K;
 stack<int> s;
 
-// STL stack 사용
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
+	cin >> K;
 
-	while (N--)
+	while (K--)
 	{
-		string op;
-		cin >> op;
+		int n;
+		cin >> n;
 
-		if (op == "push")
-		{
-			int data;
-			cin >> data;
-			s.push(data);
-		}
-		else if (op == "pop")
-		{
-			if (s.empty())
-				cout << -1 << '\n';
-			else
-			{
-				cout << s.top() << '\n';
-				s.pop();
-			}
-		}
-		else if (op == "size")
-		{
-			cout << s.size() << '\n';
-		}
-		else if (op == "empty")
-		{
-			cout << s.empty() << '\n';
-		}
-		else if (op == "top")
-		{
-			if (s.empty())
-				cout << -1 << '\n';
-			else
-				cout << s.top() << '\n';
-		}
+		if (n == 0)
+			s.pop();
+		else
+			s.push(n);
 	}
+
+	int sum = 0;
+	for (; !s.empty(); s.pop())
+		sum += s.top();
+
+	cout << sum;
 }
