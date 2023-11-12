@@ -2,55 +2,50 @@
 using namespace std;
 
 int N;
-char BEGIN = '#';
+stack<int> s;
 
+// STL stack 사용
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
-	
+
 	cin >> N;
 
 	while (N--)
 	{
-		string s;
-		cin >> s;
+		string op;
+		cin >> op;
 
-		list<char> str;
-		str.push_back(BEGIN);
-		list<char>::iterator cursor = str.begin();
-
-		for (char c : s)
+		if (op == "push")
 		{
-			if (c == '<')
-			{
-				if (*cursor != BEGIN)
-					--cursor;
-			}
-			else if (c == '>')
-			{
-				if (cursor != --str.end())
-					++cursor;
-			}
-			else if (c == '-')
-			{
-				if (*cursor != BEGIN)
-				{
-					cursor = str.erase(cursor);
-					--cursor;
-				}
-			}
+			int data;
+			cin >> data;
+			s.push(data);
+		}
+		else if (op == "pop")
+		{
+			if (s.empty())
+				cout << -1 << '\n';
 			else
 			{
-				if (cursor != str.end())
-					++cursor;
-				str.insert(cursor, c);
-				--cursor;
+				cout << s.top() << '\n';
+				s.pop();
 			}
 		}
-		str.pop_front();
-
-		for (auto c : str)
-			cout << c;
-		cout << '\n';
+		else if (op == "size")
+		{
+			cout << s.size() << '\n';
+		}
+		else if (op == "empty")
+		{
+			cout << s.empty() << '\n';
+		}
+		else if (op == "top")
+		{
+			if (s.empty())
+				cout << -1 << '\n';
+			else
+				cout << s.top() << '\n';
+		}
 	}
 }
