@@ -1,40 +1,45 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
+struct tower
+{
+	int index;
+	int height;
+};
+
 int N;
-stack<int> s;
-list<char> output;
+int output[500001];
+stack<tower> temp;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N;
-	int seq = 1;
 
-	for (int i = 0; i < N; ++i)
+	for (int i = 1; i <= N; ++i)
 	{
-		int n;
-		cin >> n;
+		int h;
+		cin >> h;
 
-		while (s.empty() || s.top() < n)
-		{
-			s.push(seq++);
-			output.push_back('+');
-		}
-
-		if (s.top() == n)
-		{
-			s.pop();
-			output.push_back('-');
-		}
+		if (i == 1)
+			temp.push(tower{ i, h });
 		else
 		{
-			cout << "NO";
-			return 0;
+			while (!temp.empty() && h > temp.top().height)
+				temp.pop();
+
+			if (temp.empty())
+			{
+				temp.push(tower{ i, h });
+				continue;
+			}
+
+			output[i] = temp.top().index;
+			temp.push(tower{ i, h });
 		}
 	}
 
-	for (char c : output)
-		cout << c << '\n';
+	for (int i = 1; i <= N; ++i)
+		cout << output[i] << ' ';
 }
