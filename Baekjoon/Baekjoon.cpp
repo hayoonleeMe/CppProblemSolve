@@ -1,29 +1,40 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int K;
+int N;
 stack<int> s;
+list<char> output;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> K;
+	cin >> N;
+	int seq = 1;
 
-	while (K--)
+	for (int i = 0; i < N; ++i)
 	{
 		int n;
 		cin >> n;
 
-		if (n == 0)
+		while (s.empty() || s.top() < n)
+		{
+			s.push(seq++);
+			output.push_back('+');
+		}
+
+		if (s.top() == n)
+		{
 			s.pop();
+			output.push_back('-');
+		}
 		else
-			s.push(n);
+		{
+			cout << "NO";
+			return 0;
+		}
 	}
 
-	int sum = 0;
-	for (; !s.empty(); s.pop())
-		sum += s.top();
-
-	cout << sum;
+	for (char c : output)
+		cout << c << '\n';
 }
