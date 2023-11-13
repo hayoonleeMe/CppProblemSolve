@@ -2,25 +2,32 @@
 using namespace std;
 
 int N;
+int seq[1000001];
+int ans[1000001];
 stack<int> s;
-long long c;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N;
+	for (int i = 1; i <= N; ++i)
+		cin >> seq[i];
 
-	int h;
-	while (N--)
+	ans[N] = -1;
+	s.push(seq[N]);
+	for (int i = N - 1; i > 0; --i)
 	{
-		cin >> h;
-
-		while (!s.empty() && h >= s.top())
+		while (!s.empty() && seq[i] >= s.top())
 			s.pop();
-		c += s.size();
-		s.push(h);
+
+		if (s.empty())
+			ans[i] = -1;
+		else if (s.top() > seq[i])
+			ans[i] = s.top();
+		s.push(seq[i]);
 	}
 
-	cout << c;
+	for (int i = 1; i <= N; ++i)
+		cout << ans[i] << ' ';
 }
