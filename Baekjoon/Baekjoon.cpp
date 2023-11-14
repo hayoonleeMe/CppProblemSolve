@@ -1,58 +1,66 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int ans;
-deque<int> dq;
+int T, N;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-	for (int i = 1; i <= N; ++i)
-		dq.push_back(i);
+	cin >> T;
 
-	int m;
-	while (M--)
+	while (T--)
 	{
-		cin >> m;
+		string func;
+		cin >> func >> N;
 
-		// 1
-		if (dq.front() == m)
+		// 문자열에서 숫자 분리
+		deque<int> dq;
+		string str, seq;
+		cin >> str;
+		str = str.substr(1, str.size() - 2);
+		istringstream ss(str);
+		while (getline(ss, seq, ','))
+			dq.push_back(stoi(seq));
+
+		bool isFailed = false;
+		bool isReversed = false;
+		for (char f : func)
 		{
-			dq.pop_front();
-			continue;
-		}
-
-		auto it = find(dq.begin(), dq.end(), m);
-		int op2 = it - dq.begin();
-		int op3 = dq.size() - op2;
-
-		// 2
-		if (op2 <= op3)
-		{
-			ans += op2;
-			for (int i = 0; i < op2; ++i)
+			if (f == 'R')
+				isReversed = !isReversed;
+			else if (f == 'D')
 			{
-				dq.push_back(dq.front());
-				dq.pop_front();
+				if (dq.empty())
+				{
+					isFailed = true;
+					break;
+				}
+
+				if (isReversed)
+					dq.pop_back();
+				else
+					dq.pop_front();
 			}
 		}
-		// 3
+
+		// 출력
+		if (dq.empty() && isFailed)
+			cout << "error\n";
 		else
 		{
-			ans += op3;
-			for (int i = 0; i < op3; ++i)
+			cout << '[';
+
+			if (!dq.empty())
 			{
-				dq.push_front(dq.back());
-				dq.pop_back();
+				if (isReversed)
+					reverse(dq.begin(), dq.end());
+				cout << dq.front();
+				for (auto it = dq.begin() + 1; it != dq.end(); ++it)
+					cout << ',' << *it;
 			}
+			
+			cout << "]\n";
 		}
-
-		// 1
-		dq.pop_front();
 	}
-
-	cout << ans;
 }
