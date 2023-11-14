@@ -2,32 +2,58 @@
 using namespace std;
 
 int N;
-int seq[1000001];
-int ans[1000001];
-stack<int> s;
+queue<int> q;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N;
-	for (int i = 1; i <= N; ++i)
-		cin >> seq[i];
-
-	ans[N] = -1;
-	s.push(seq[N]);
-	for (int i = N - 1; i > 0; --i)
+	
+	string op;
+	while (N--)
 	{
-		while (!s.empty() && seq[i] >= s.top())
-			s.pop();
+		cin >> op;
 
-		if (s.empty())
-			ans[i] = -1;
-		else if (s.top() > seq[i])
-			ans[i] = s.top();
-		s.push(seq[i]);
+		if (op == "push")
+		{
+			int val;
+			cin >> val;
+
+			q.push(val);
+		}
+		else if (op == "pop")
+		{
+			if (q.empty())
+				cout << "-1\n";
+			else
+			{
+				cout << q.front() << '\n';
+				q.pop();
+			}
+		}
+		else if (op == "size")
+			cout << q.size() << '\n';
+		else if (op == "empty")
+		{
+			if (q.empty())
+				cout << "1\n";
+			else
+				cout << "0\n";
+		}
+		else if (op == "front")
+		{
+			if (q.empty())
+				cout << "-1\n";
+			else
+				cout << q.front() << '\n';
+		}
+		else if (op == "back")
+		{
+			if (q.empty())
+				cout << "-1\n";
+			else
+				cout << q.back() << '\n';
+		}
 	}
-
-	for (int i = 1; i <= N; ++i)
-		cout << ans[i] << ' ';
 }
