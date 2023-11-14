@@ -2,6 +2,7 @@
 using namespace std;
 
 int N;
+deque<int> dq;
 
 int main()
 {
@@ -9,16 +10,64 @@ int main()
 
 	cin >> N;
 
-	queue<int> q;
-	for (int i = 1; i <= N; ++i)
-		q.push(i);
-
-	while (q.size() > 1)
+	string op;
+	while (N--)
 	{
-		q.pop();
-		q.push(q.front());
-		q.pop();
-	}
+		cin >> op;
 
-	cout << q.front();
+        int val;
+        if (op == "push_front")
+        {
+            cin >> val;
+            dq.push_front(val);
+        }
+        else if (op == "push_back")
+        {
+            cin >> val;
+            dq.push_back(val);
+        }
+        else if (op == "pop_front")
+        {
+            if (dq.empty())
+                cout << "-1\n";
+            else
+            {
+                cout << dq.front() << '\n';
+                dq.pop_front();
+            }
+        }
+        else if (op == "pop_back")
+        {
+            if (dq.empty())
+                cout << "-1\n";
+            else
+            {
+                cout << dq.back() << '\n';
+                dq.pop_back();
+            }
+        }
+        else if (op == "size")
+            cout << dq.size() << '\n';
+        else if (op == "empty")
+        {
+            if (dq.empty())
+                cout << "1\n";
+            else
+                cout << "0\n";
+        }
+        else if (op == "front")
+        {
+            if (dq.empty())
+                cout << "-1\n";
+            else
+                cout << dq.front() << '\n';
+        }
+        else if (op == "back")
+        {
+            if (dq.empty())
+                cout << "-1\n";
+            else
+                cout << dq.back() << '\n';
+        }
+	}
 }
