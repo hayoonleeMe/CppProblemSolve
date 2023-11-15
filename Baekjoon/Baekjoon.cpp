@@ -1,14 +1,14 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, ans;
+int T;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
-	
-	cin >> N;
-	while (N--)
+
+	cin >> T;
+	while (T--)
 	{
 		stack<char> s;
 		string str;
@@ -16,21 +16,20 @@ int main()
 
 		for (char c : str)
 		{
-			if (s.empty())
-			{
+			if (c == '(')
 				s.push(c);
-				continue;
-			}
-
-			if (s.top() == c)
-				s.pop();
 			else
-				s.push(c);
+			{
+				if (!s.empty() && s.top() == '(')
+					s.pop();
+				else
+					s.push(c);
+			}
 		}
 
 		if (s.empty())
-			++ans;
+			cout << "YES\n";
+		else
+			cout << "NO\n";
 	}
-
-	cout << ans;
 }
