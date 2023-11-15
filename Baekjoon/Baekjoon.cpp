@@ -1,35 +1,39 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int T;
+int ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> T;
-	while (T--)
-	{
-		stack<char> s;
-		string str;
-		cin >> str;
+	string str;
+	cin >> str;
 
-		for (char c : str)
+	stack<char> s;
+	int i = 0;
+	while (i < str.size())
+	{
+		if (str[i] == '(')
 		{
-			if (c == '(')
-				s.push(c);
-			else
+			// 레이저
+			if (str[i + 1] == ')')
 			{
-				if (!s.empty() && s.top() == '(')
-					s.pop();
-				else
-					s.push(c);
+				i += 2;
+				ans += s.size();
+				continue;
 			}
+			else
+				s.push(str[i]);
+		}
+		else if (str[i] == ')')
+		{
+			s.pop();
+			++ans;
 		}
 
-		if (s.empty())
-			cout << "YES\n";
-		else
-			cout << "NO\n";
+		++i;
 	}
+
+	cout << ans;
 }
