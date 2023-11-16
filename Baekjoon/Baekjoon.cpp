@@ -1,52 +1,62 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
+#define X first
+#define Y second
+
+int N, M;
+int board[500][500];
+int visited[500][500];
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
+queue<pair<int, int>> q;
+int num, maxArea;
+
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	string str;
-	cin >> str;
-	stack<char> s;
+	cin >> N >> M;
+	for (int n = 0; n < N; ++n)
+		for (int m = 0; m < M; ++m)
+			cin >> board[n][m];
 
-	int mul = 1, ans = 0;
-	for (int i = 0; i < str.size(); ++i)
+	for (int n = 0; n < N; ++n)
 	{
-		if (str[i] == '(' || str[i] == '[')
+		for (int m = 0; m < M; ++m)
 		{
-			s.push(str[i]);
-			mul *= (str[i] == '(') ? 2 : 3;
-		}
-		else if (str[i] == ')')
-		{
-			if (s.empty() || s.top() != '(')
+			if (board[n][m] != 1 || visited[n][m])
+				continue;
+
+			++num;
+			visited[n][m] = 1;
+			q.push({ n, m });
+			int area = 1;
+
+			while (!q.empty())
 			{
-				cout << 0;
-				return 0;
+				pair<int, int> cur = q.front();
+				q.pop();
+
+				for (int i = 0; i < 4; ++i)
+				{
+					int nx = cur.X + dx[i];
+					int ny = cur.Y + dy[i];
+
+					if (nx < 0 || nx >= N || ny < 0 || ny >= M)
+						continue;
+					if (visited[nx][ny] || board[nx][ny] != 1)
+						continue;
+
+					visited[nx][ny] = 1;
+					q.push({ nx, ny });
+					++area;
+				}
 			}
 
-			if (str[i - 1] == '(')
-				ans += mul;
-			mul /= 2;
-			s.pop();
-		}
-		else if (str[i] == ']')
-		{
-			if (s.empty() || s.top() != '[')
-			{
-				cout << 0;
-				return 0;
-			}
-
-			if (str[i - 1] == '[')
-				ans += mul;
-			mul /= 3;
-			s.pop();
+			maxArea = max(maxArea, area);
 		}
 	}
 
-	if (s.empty())
-		cout << ans;
-	else
-		cout << 0;
+	cout << num << '\n' << maxArea << '\n';
 }
