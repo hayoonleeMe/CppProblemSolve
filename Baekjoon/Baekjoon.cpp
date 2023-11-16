@@ -3,30 +3,36 @@ using namespace std;
 
 #define X first
 #define Y second
-int N, M;
-string board[100];
 int dx[4] = { 1, 0, -1, 0 };
 int dy[4] = { 0, 1, 0, -1 };
+int M, N;
+int board[1000][1000];
+int dist[1000][1000];
 queue<pair<int, int>> q;
-int dist[100][100];
+int ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
+	cin >> M >> N;
 	for (int n = 0; n < N; ++n)
 	{
-		cin >> board[n];
-		fill(dist[n], dist[n] + M, -1);
+		for (int m = 0; m < M; ++m)
+		{
+			cin >> board[n][m];
+			if (board[n][m] == 1)
+				q.push({ n, m });
+			else if (board[n][m] == 0)
+				dist[n][m] = -1;
+		}
 	}
 
-	q.push({ 0,0 });
-	dist[0][0] = 0;
 	while (!q.empty())
 	{
 		pair<int, int> cur = q.front();
 		q.pop();
+		
 		for (int i = 0; i < 4; ++i)
 		{
 			int nx = cur.X + dx[i];
@@ -34,7 +40,7 @@ int main()
 
 			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
 				continue;
-			if (dist[nx][ny] >= 0 || board[nx][ny] != '1')
+			if (dist[nx][ny] >= 0)
 				continue;
 
 			q.push({ nx, ny });
@@ -42,5 +48,18 @@ int main()
 		}
 	}
 
-	cout << dist[N - 1][M - 1] + 1;
+	for (int n = 0; n < N; ++n)
+	{
+		for (int m = 0; m < M; ++m)
+		{
+			if (dist[n][m] == -1)
+			{
+				cout << -1;
+				return 0;
+			}
+			ans = max(ans, dist[n][m]);
+		}
+	}
+
+	cout << ans;
 }
