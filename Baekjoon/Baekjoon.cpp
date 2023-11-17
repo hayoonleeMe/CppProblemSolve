@@ -1,69 +1,59 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
-int dl[6] = { 1, -1, 0, 0, 0, 0 };
-int dr[6] = { 0, 0, 1, 0, -1, 0 };
-int dc[6] = { 0, 0, 0, 1, 0, -1 };
-int L, R, C;
-int gI, gJ, gK;
-string board[32][32];
-int dist[32][32][32];
+
+int N, M, V;
+int graph[1002][1002];
+int visited[1002];
+queue<int> q;
+
+void Dfs(int v)
+{
+	visited[v] = 1;
+	cout << v << ' ';
+
+	for (int i = 1; i <= N; ++i)
+	{
+		if (visited[i] != 1 && graph[v][i])
+			Dfs(i);
+	}
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	for (cin >> L >> R >> C; L != 0 && R != 0 && C != 0; cin >> L >> R >> C)
+	cin >> N >> M >> V;
+	for (int i = 0; i < M; ++i)
 	{
-		queue<tuple<int, int, int>> q;
+		int a, b;
+		cin >> a >> b;
+		graph[a][b] = 1;
+		graph[b][a] = 1;
+	}
 
-		for (int i = 0; i < L; ++i)
+	// DFS
+	Dfs(V);
+	cout << '\n';
+
+	// BFS
+	memset(visited, 0, sizeof(visited));
+
+	visited[V] = 1;
+	q.push(V);
+
+	while (!q.empty())
+	{
+		int cur = q.front();
+		q.pop();
+		cout << cur << ' ';
+
+		for (int i = 1; i <= N; ++i)
 		{
-			for (int j = 0; j < R; ++j)
+			if (graph[cur][i] && visited[i] != 1)
 			{
-				cin >> board[i][j];
-				fill(dist[i][j], dist[i][j] + C, -1);
-
-				for (int k = 0; k < C; ++k)
-				{
-					if (board[i][j][k] == 'S')
-					{
-						dist[i][j][k] = 0;
-						q.push({ i,j,k });
-					}
-					else if (board[i][j][k] == 'E')
-					{
-						gI = i;
-						gJ = j;
-						gK = k;
-					}
-				}
+				visited[i] = 1;
+				q.push(i);
 			}
 		}
-
-		while (!q.empty())
-		{
-			auto cur = q.front();
-			q.pop();
-
-			for (int i = 0; i < 6; ++i)
-			{
-				int nl = get<0>(cur) + dl[i];
-				int nr = get<1>(cur) + dr[i];
-				int nc = get<2>(cur) + dc[i];
-
-				if (nl < 0 || nl > L || nr < 0 || nr > R || nc < 0 || nc > C)
-					continue;
-				if (dist[nl][nr][nc] >= 0 || board[nl][nr][nc] == '#')
-					continue;
-
-				dist[nl][nr][nc] = dist[get<0>(cur)][get<1>(cur)][get<2>(cur)] + 1;
-				q.push({ nl, nr, nc });
-			}
-		}
-
-		if (dist[gI][gJ][gK] == -1)
-			cout << "Trapped!\n";
-		else
-			cout << "Escaped in " << dist[gI][gJ][gK] << " minute(s).\n";
 	}
 }
