@@ -2,11 +2,11 @@
 using namespace std;
 #define X first
 #define Y second
-int dx[4] = { 1, 0, -1, 0 };
-int dy[4] = { 0, 1, 0, -1 };
-int T, M, N, K;
-int board[52][52];
-int visited[52][52];
+int dx[8] = { -1, -2, -2, -1, 1, 2, 2, 1 };
+int dy[8] = { -2, -1, 1, 2, 2, 1, -1, -2 };
+int T, I;
+int board[302][302];
+int dist[302][302];
 
 int main()
 {
@@ -15,54 +15,37 @@ int main()
 	cin >> T;
 	while (T--)
 	{
-		cin >> M >> N >> K;
-		for (int i = 0; i < N; ++i)
-		{
-			fill(board[i], board[i] + M, 0);
-			fill(visited[i], visited[i] + M, 0);
-		}
-
-		while (K--)
-		{
-			int x, y;
-			cin >> x >> y;
-			board[y][x] = 1;
-		}
+		cin >> I;
+		for (int i = 0; i < I; ++i)
+			fill(dist[i], dist[i] + I, -1);
 
 		queue<pair<int, int>> q;
-		int ans = 0;
-		for (int i = 0; i < N; ++i)
+		int a, b, c, d;
+		cin >> a >> b >> c >> d;
+
+		dist[a][b] = 0;
+		q.push({ a, b });
+
+		while (!q.empty())
 		{
-			for (int j = 0; j < M; ++j)
+			pair<int, int> cur = q.front();
+			q.pop();
+
+			for (int i = 0; i < 8; ++i)
 			{
-				if (board[i][j] != 1 || visited[i][j] == 1)
+				int nx = cur.X + dx[i];
+				int ny = cur.Y + dy[i];
+
+				if (nx < 0 || nx >= I || ny < 0 || ny >= I)
+					continue;
+				if (dist[nx][ny] >= 0)
 					continue;
 
-				++ans;
-				visited[i][j] = 1;
-				q.push({ i, j });
-				while (!q.empty())
-				{
-					pair<int, int> cur = q.front();
-					q.pop();
-
-					for (int k = 0; k < 4; ++k)
-					{
-						int nx = cur.X + dx[k];
-						int ny = cur.Y + dy[k];
-
-						if (nx < 0 || nx >= N || ny < 0 || ny >= M)
-							continue;
-						if (board[nx][ny] != 1 || visited[nx][ny])
-							continue;
-
-						visited[nx][ny] = 1;
-						q.push({ nx, ny });
-					}
-				}
+				dist[nx][ny] = dist[cur.X][cur.Y] + 1;
+				q.push({ nx, ny });
 			}
 		}
 
-		cout << ans << '\n';
+		cout << dist[c][d] << '\n';
 	}
 }
