@@ -2,43 +2,41 @@
 using namespace std;
 
 int N;
+int board[2200][2200];
+int ans[3];
 
-void func(int n)
+void func(int n, int r1, int c1)
 {
-	int dash = 4 * n;
+	if (n == 0)
+		return;
 
-	
-
-	for (int i = 0; i < dash; ++i)
-		cout << '_';
-	cout << "\"재귀함수가 뭔가요?\"\n";
-
-	if (n == N)
+	// 숫자가 같은지 확인
+	int t = board[r1][c1];
+	for (int i = r1; i < r1 + n; ++i)
 	{
-		for (int i = 0; i < dash; ++i)
-			cout << '_';
-		cout << "\"재귀함수는 자기 자신을 호출하는 함수라네\"\n";
-	}
-	else
-	{
-		for (int i = 0; i < dash; ++i)
-			cout << '_';
-		cout << "\"잘 들어보게. 옛날옛날 한 산 꼭대기에 이세상 모든 지식을 통달한 선인이 있었어.\n";
+		for (int j = c1; j < c1 + n; ++j)
+		{
+			if (t != board[i][j])
+			{
+				int off = n / 3;
+				func(off, r1, c1);
+				func(off, r1, c1 + off);
+				func(off, r1, c1 + 2 * off);
 
-		for (int i = 0; i < dash; ++i)
-			cout << '_';
-		cout << "마을 사람들은 모두 그 선인에게 수많은 질문을 했고, 모두 지혜롭게 대답해 주었지.\n";
+				func(off, r1 + off, c1);
+				func(off, r1 + off, c1 + off);
+				func(off, r1 + off, c1 + 2 * off);
 
-		for (int i = 0; i < dash; ++i)
-			cout << '_';
-		cout << "그의 답은 대부분 옳았다고 하네. 그런데 어느 날, 그 선인에게 한 선비가 찾아와서 물었어.\"\n";
+				func(off, r1 + 2 * off, c1);
+				func(off, r1 + 2 * off, c1 + off);
+				func(off, r1 + 2 * off, c1 + 2 * off);
 
-		func(n + 1);
+				return;
+			}
+		}
 	}
 
-	for (int i = 0; i < dash; ++i)
-		cout << '_';
-	cout << "라고 답변하였지.\n";
+	++ans[t + 1];
 }
 
 int main()
@@ -46,7 +44,11 @@ int main()
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N;
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < N; ++j)
+			cin >> board[i][j];
 
-	cout << "어느 한 컴퓨터공학과 학생이 유명한 교수님을 찾아가 물었다.\n";
-	func(0);
+	func(N, 0, 0);
+
+	cout << ans[0] << '\n' << ans[1] << '\n' << ans[2];
 }
