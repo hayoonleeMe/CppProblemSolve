@@ -1,36 +1,23 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
+ll A, B, C;
 
-int N, M;
-map<string, int> m;
-list<string> ans;
+ll POW(ll a, ll b, ll m)
+{
+	if (b == 1)
+		return a % m;
+	ll val = POW(a, b / 2, m);
+	val = val * val % m;
+	if (b % 2 == 0)
+		return val;
+	return val * a % m;
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-
-	for (int i = 0; i < N; ++i)
-	{
-		string s;
-		cin >> s;
-		m.insert({ s, 1 });
-	}
-
-	for (int i = 0; i < M; ++i)
-	{
-		string s;
-		cin >> s;
-
-		++m[s];
-	}
-
-	for (auto p : m)
-		if (p.second > 1)
-			ans.push_back(p.first);
-
-	cout << ans.size() << '\n';
-	for (string s : ans)
-		cout << s << '\n';
+	cin >> A >> B >> C;
+	cout << POW(A, B, C);
 }
