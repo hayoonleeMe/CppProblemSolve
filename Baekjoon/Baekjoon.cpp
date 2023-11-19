@@ -1,23 +1,27 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
-ll A, B, C;
 
-ll POW(ll a, ll b, ll m)
+int N;
+
+void func(int a, int b, int n)
 {
-	if (b == 1)
-		return a % m;
-	ll val = POW(a, b / 2, m);
-	val = val * val % m;
-	if (b % 2 == 0)
-		return val;
-	return val * a % m;
+	if (n == 1)
+	{
+		cout << a << ' ' << b << '\n';
+		return;
+	}
+
+	func(a, 6 - a - b, n - 1);
+	cout << a << ' ' << b << '\n';
+	func(6 - a - b, b, n - 1);
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> A >> B >> C;
-	cout << POW(A, B, C);
+	cin >> N;
+	// 1<<N : 2^N (1을 비트 기준 왼쪽으로 N칸 밀으라는 뜻 left shift)
+	cout << (1 << N) - 1 << '\n';
+	func(1, 3, N);
 }
