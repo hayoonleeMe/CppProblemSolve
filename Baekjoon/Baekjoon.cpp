@@ -4,38 +4,23 @@ using namespace std;
 int N;
 char board[2200][2200];
 
-void print3x3Star(int i, int j)
-{
-	board[i][j] = '*';
-	board[i][j + 1] = '*';
-	board[i][j + 2] = '*';
-
-	board[i + 1][j] = '*';
-	board[i + 1][j + 2] = '*';
-	
-	board[i + 2][j] = '*';
-	board[i + 2][j + 1] = '*';
-	board[i + 2][j + 2] = '*';
-}
-
 void func(int n, int i, int j)
 {
-	if (n == 3)
+	if (n == 1)
 	{
-		print3x3Star(i, j);
+		board[i][j] = '*';
 		return;
 	}
 
-	func(n / 3, i, j);
-	func(n / 3, i, j + n / 3);
-	func(n / 3, i, j + 2 * n / 3);
-
-	func(n / 3, i + n / 3, j);
-	func(n / 3, i + n / 3, j + 2 * n / 3);
-
-	func(n / 3, i + 2 * n / 3, j);
-	func(n / 3, i + 2 * n / 3, j + n / 3);
-	func(n / 3, i + 2 * n / 3, j + 2 * n / 3);
+	for (int r = 0; r < 3; ++r)
+	{
+		for (int c = 0; c < 3; ++c)
+		{
+			if (r == 1 && c == 1)
+				continue;
+			func(n / 3, i + n / 3 * r, j + n / 3 * c);
+		}
+	}
 }
 
 int main()
@@ -44,15 +29,10 @@ int main()
 
 	cin >> N;
 	for (int i = 0; i < N; ++i)
-		for (int j = 0; j < N; ++j)
-			board[i][j] = ' ';
+		fill(board[i], board[i] + N, ' ');
 
 	func(N, 0, 0);
 
 	for (int i = 0; i < N; ++i)
-	{
-		for (int j = 0; j < N; ++j)
-			cout << board[i][j];
-		cout << '\n';
-	}
+		cout << board[i] << '\n';
 }
