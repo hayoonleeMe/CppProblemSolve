@@ -1,24 +1,28 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-char board[2200][2200];
+int N, M;
+int arr[10];
+bool isused[10];
 
-void func(int n, int i, int j)
+void func(int m)
 {
-	if (n == 1)
+	if (m == M)
 	{
-		board[i][j] = '*';
+		for (int i = 0; i < M; ++i)
+			cout << arr[i] << ' ';
+		cout << '\n';
 		return;
 	}
 
-	for (int r = 0; r < 3; ++r)
+	for (int i = 1; i <= N; ++i)
 	{
-		for (int c = 0; c < 3; ++c)
+		if (!isused[i])
 		{
-			if (r == 1 && c == 1)
-				continue;
-			func(n / 3, i + n / 3 * r, j + n / 3 * c);
+			arr[m] = i;
+			isused[i] = 1;
+			func(m + 1);
+			isused[i] = 0;
 		}
 	}
 }
@@ -27,12 +31,7 @@ int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
-	for (int i = 0; i < N; ++i)
-		fill(board[i], board[i] + N, ' ');
+	cin >> N >> M;
 
-	func(N, 0, 0);
-
-	for (int i = 0; i < N; ++i)
-		cout << board[i] << '\n';
+	func(0);
 }
