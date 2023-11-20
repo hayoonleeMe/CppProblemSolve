@@ -2,35 +2,40 @@
 using namespace std;
 
 int N;
-string board[64];
+char board[2200][2200];
 
-bool chk(int n, int i, int j)
+void print3x3Star(int i, int j)
 {
-	for (int r = i; r < i + n; ++r)
-		for (int c = j; c < j + n; ++c)
-			if (board[r][c] != board[i][j])
-				return false;
+	board[i][j] = '*';
+	board[i][j + 1] = '*';
+	board[i][j + 2] = '*';
 
-	return true;
+	board[i + 1][j] = '*';
+	board[i + 1][j + 2] = '*';
+	
+	board[i + 2][j] = '*';
+	board[i + 2][j + 1] = '*';
+	board[i + 2][j + 2] = '*';
 }
 
 void func(int n, int i, int j)
 {
-	if (chk(n, i, j))
+	if (n == 3)
 	{
-		cout << board[i][j];
+		print3x3Star(i, j);
 		return;
 	}
 
-	cout << '(';
+	func(n / 3, i, j);
+	func(n / 3, i, j + n / 3);
+	func(n / 3, i, j + 2 * n / 3);
 
-	int half = n / 2;
-	func(half, i, j);
-	func(half, i, j + half);
-	func(half, i + half, j);
-	func(half, i + half, j + half);
+	func(n / 3, i + n / 3, j);
+	func(n / 3, i + n / 3, j + 2 * n / 3);
 
-	cout << ')';
+	func(n / 3, i + 2 * n / 3, j);
+	func(n / 3, i + 2 * n / 3, j + n / 3);
+	func(n / 3, i + 2 * n / 3, j + 2 * n / 3);
 }
 
 int main()
@@ -39,7 +44,15 @@ int main()
 
 	cin >> N;
 	for (int i = 0; i < N; ++i)
-		cin >> board[i];
+		for (int j = 0; j < N; ++j)
+			board[i][j] = ' ';
 
 	func(N, 0, 0);
+
+	for (int i = 0; i < N; ++i)
+	{
+		for (int j = 0; j < N; ++j)
+			cout << board[i][j];
+		cout << '\n';
+	}
 }
