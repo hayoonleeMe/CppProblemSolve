@@ -15,7 +15,10 @@ void func(int cur)
 	}
 
 	for (int i = 1; i <= N; ++i)
-	{
+	{ 
+		if (cur > 0 && seq[cur - 1] > i)
+			continue;
+
 		seq[cur] = i;
 		func(cur + 1);
 	}
