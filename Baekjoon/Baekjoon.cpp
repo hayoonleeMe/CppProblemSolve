@@ -17,6 +17,9 @@ void func(int k)
 
 	for (int i = 0; i < N; ++i)
 	{
+		if (k != 0 && arr[seqI[k - 1]] > arr[i])
+			continue;
+
 		seqI[k] = i;
 		func(k + 1);
 	}
