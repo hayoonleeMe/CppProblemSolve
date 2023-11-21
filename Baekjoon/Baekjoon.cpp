@@ -2,7 +2,9 @@
 using namespace std;
 
 int N, M;
+int arr[10];
 int seq[10];
+bool isused[10];
 
 void func(int cur)
 {
@@ -14,13 +16,15 @@ void func(int cur)
 		return;
 	}
 
-	for (int i = 1; i <= N; ++i)
-	{ 
-		if (cur > 0 && seq[cur - 1] > i)
-			continue;
-
-		seq[cur] = i;
-		func(cur + 1);
+	for (int i = 0; i < N; ++i)
+	{
+		if (!isused[i])
+		{
+			seq[cur] = arr[i];
+			isused[i] = 1;
+			func(cur + 1);
+			isused[i] = 0;
+		}
 	}
 }
 
@@ -29,6 +33,9 @@ int main()
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N >> M;
+	for (int i = 0; i < N; ++i)
+		cin >> arr[i];
+	sort(arr, arr + N);
 
 	func(0);
 }
