@@ -3,30 +3,22 @@ using namespace std;
 
 int N, M;
 int arr[10];
-int seq[10];
-bool isused[10];
+int seqI[10];
 
-void func(int cur)
+void func(int k)
 {
-	if (cur == M)
+	if (k == M)
 	{
 		for (int i = 0; i < M; ++i)
-			cout << seq[i] << ' ';
+			cout << arr[seqI[i]] << ' ';
 		cout << '\n';
 		return;
 	}
 
 	for (int i = 0; i < N; ++i)
 	{
-		if (isused[i])
-			continue;
-		if (cur > 0 && seq[cur - 1] > arr[i])
-			continue;
-
-		seq[cur] = arr[i];
-		isused[i] = 1;
-		func(cur + 1);
-		isused[i] = 0;
+		seqI[k] = i;
+		func(k + 1);
 	}
 }
 
