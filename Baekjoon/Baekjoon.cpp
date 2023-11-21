@@ -18,13 +18,15 @@ void func(int cur)
 
 	for (int i = 0; i < N; ++i)
 	{
-		if (!isused[i])
-		{
-			seq[cur] = arr[i];
-			isused[i] = 1;
-			func(cur + 1);
-			isused[i] = 0;
-		}
+		if (isused[i])
+			continue;
+		if (cur > 0 && seq[cur - 1] > arr[i])
+			continue;
+
+		seq[cur] = arr[i];
+		isused[i] = 1;
+		func(cur + 1);
+		isused[i] = 0;
 	}
 }
 
