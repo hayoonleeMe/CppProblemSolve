@@ -5,7 +5,7 @@ int N, M;
 int arr[10];
 int seqI[10];
 
-void func(int k)
+void func(int k, int st)
 {
 	if (k == M)
 	{
@@ -15,13 +15,10 @@ void func(int k)
 		return;
 	}
 
-	for (int i = 0; i < N; ++i)
+	for (int i = st; i < N; ++i)
 	{
-		if (k != 0 && arr[seqI[k - 1]] > arr[i])
-			continue;
-
 		seqI[k] = i;
-		func(k + 1);
+		func(k + 1, i);
 	}
 }
 
@@ -34,5 +31,5 @@ int main()
 		cin >> arr[i];
 	sort(arr, arr + N);
 
-	func(0);
+	func(0, 0);
 }
