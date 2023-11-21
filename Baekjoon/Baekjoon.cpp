@@ -3,7 +3,6 @@ using namespace std;
 
 int N, M;
 int seq[10];
-bool isused[10];
 
 void func(int cur)
 {
@@ -17,15 +16,8 @@ void func(int cur)
 
 	for (int i = 1; i <= N; ++i)
 	{
-		if (isused[i])
-			continue;
-		if (cur > 0 && i < seq[cur - 1])
-			continue;
-
 		seq[cur] = i;
-		isused[i] = 1;
 		func(cur + 1);
-		isused[i] = 0;
 	}
 }
 
