@@ -1,35 +1,31 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-const int MAX = 14;
-bool isused1[2 * MAX + 2];
-bool isused2[2 * MAX + 2];
-bool isused3[2 * MAX + 2];
+int N, M;
+int seq[10];
+bool isused[10];
 
-int cnt = 0;
 void func(int cur)
 {
-	if (cur == N)
+	if (cur == M)
 	{
-		++cnt;
+		for (int i = 0; i < M; ++i)
+			cout << seq[i] << ' ';
+		cout << '\n';
 		return;
 	}
 
-	for (int i = 0; i < N; ++i)
+	for (int i = 1; i <= N; ++i)
 	{
-		if (isused1[i] || isused2[cur + i] || isused3[cur - i + N - 1])
+		if (isused[i])
+			continue;
+		if (cur > 0 && i < seq[cur - 1])
 			continue;
 
-		isused1[i] = 1;
-		isused2[cur + i] = 1;
-		isused3[cur - i + N - 1] = 1;
-
+		seq[cur] = i;
+		isused[i] = 1;
 		func(cur + 1);
-
-		isused1[i] = 0;
-		isused2[cur + i] = 0;
-		isused3[cur - i + N - 1] = 0;
+		isused[i] = 0;
 	}
 }
 
@@ -37,9 +33,7 @@ int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
+	cin >> N >> M;
 
 	func(0);
-
-	cout << cnt;
 }
