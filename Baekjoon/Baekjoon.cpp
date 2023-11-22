@@ -1,40 +1,63 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int arr[10];
-int seq[10];
-
-void func(int k, int st)
-{
-	if (k == M)
-	{
-		for (int i = 0; i < M; ++i)
-			cout << seq[i] << ' ';
-		cout << '\n';
-		return;
-	}
-
-	int prev = 0;
-	for (int i = st; i < N; ++i)
-	{
-		if (arr[i] != prev)
-		{
-			seq[k] = arr[i];
-			func(k + 1, i);
-			prev = arr[i];
-		}
-	}
-}
+int M;
+set<int> s;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-	for (int i = 0; i < N; ++i)
-		cin >> arr[i];
-	sort(arr, arr + N);
+	cin >> M;
+	while (M--)
+	{
+		string op;
+		cin >> op;
 
-	func(0, 0);
+		if (op == "add")
+		{
+			int x;
+			cin >> x;
+			s.insert(x);
+		}
+		else if (op == "remove")
+		{ 
+			int x;
+			cin >> x;
+			set<int>::iterator it;
+			it = s.find(x);
+			if (it != s.end())
+				s.erase(it);
+		}
+		else if (op == "check")
+		{ 
+			int x;
+			cin >> x;
+			set<int>::iterator it;
+			it = s.find(x);
+			if (it != s.end())
+				cout << "1\n";
+			else
+				cout << "0\n";
+		}
+		else if (op == "toggle")
+		{ 
+			int x;
+			cin >> x;
+			set<int>::iterator it;
+			it = s.find(x);
+			if (it != s.end())
+				s.erase(it);
+			else
+				s.insert(x);
+		}
+		else if (op == "all")
+		{
+			s = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 };
+		}
+		else if (op == "empty")
+		{
+			s.clear();
+		}
+	}
 }
