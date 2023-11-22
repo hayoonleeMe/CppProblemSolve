@@ -1,25 +1,37 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-map<string, string> m;
+int K;
+int arr[15];
+int seq[15];
+
+void func(int k, int st)
+{
+	if (k == 6)
+	{
+		for (int i = 0; i < 6; ++i)
+			cout << seq[i] << ' ';
+		cout << '\n';
+		return;
+	}
+
+	for (int i = st; i < K; ++i)
+	{
+		seq[k] = arr[i];
+		func(k + 1, i + 1);
+	}
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-	while (N--)
+	for (cin >> K; K != 0; cin >> K)
 	{
-		string a, b;
-		cin >> a >> b;
-		m[a] = b;
-	}
+		for (int i = 0; i < K; ++i)
+			cin >> arr[i];
 
-	while (M--)
-	{
-		string s;
-		cin >> s;
-		cout << m[s] << '\n';
+		func(0, 0);
+		cout << '\n';
 	}
 }
