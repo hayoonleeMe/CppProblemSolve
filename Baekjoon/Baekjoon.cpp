@@ -2,7 +2,7 @@
 using namespace std;
 
 int N, M;
-int mask[10];
+int arr[10];
 
 // next_permutation 사용
 int main()
@@ -10,14 +10,15 @@ int main()
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N >> M;
-	for (int i = M; i < N; ++i)
-		mask[i] = 1;
+	for (int i = 0; i < N; ++i)
+		cin >> arr[i];
+	sort(arr, arr + N);
 
 	do
 	{
-		for (int i = 0; i < N; ++i)
-			if (!mask[i])
-				cout << i + 1 << ' ';
+		for (int i = 0; i < M; ++i)
+			cout << arr[i] << ' ';
 		cout << '\n';
-	} while (next_permutation(mask, mask + N));
+		reverse(arr + M, arr + N);
+	} while (next_permutation(arr, arr + N));
 }
