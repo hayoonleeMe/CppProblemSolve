@@ -4,9 +4,8 @@ using namespace std;
 int N, M;
 int arr[10];
 int seq[10];
-bool isused[10];
 
-void func(int k, int st)
+void func(int k)
 {
 	if (k == M)
 	{
@@ -17,14 +16,12 @@ void func(int k, int st)
 	}
 
 	int prev = 0;
-	for (int i = st; i < N; ++i)
+	for (int i = 0; i < N; ++i)
 	{
-		if (!isused[i] && arr[i] != prev)
+		if (arr[i] != prev)
 		{
 			seq[k] = arr[i];
-			isused[i] = 1;
-			func(k + 1, i + 1);
-			isused[i] = 0;
+			func(k + 1);
 			prev = arr[i];
 		}
 	}
@@ -39,5 +36,5 @@ int main()
 		cin >> arr[i];
 	sort(arr, arr + N);
 
-	func(0, 0);
+	func(0);
 }
