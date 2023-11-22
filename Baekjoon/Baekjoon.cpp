@@ -1,29 +1,41 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int K;
-int arr[15];
-int mask[15];
+int L, C;
+char arr[20];
+char seq[20];
 
-// next_permutation 사용
+void func(int k, int st, int v, int c)
+{
+	if (k == L)
+	{
+		if (v >= 1 && c >= 2)
+		{
+			for (int i = 0; i < L; ++i)
+				cout << seq[i];
+			cout << '\n';
+		}
+		return;
+	}
+
+	for (int i = st; i < C; ++i)
+	{
+		seq[k] = arr[i];
+		if (seq[k] == 'a' || seq[k] == 'e' || seq[k] == 'i' || seq[k] == 'o' || seq[k] == 'u')
+			func(k + 1, i + 1, v + 1, c);
+		else
+			func(k + 1, i + 1, v, c + 1);
+	}
+}
+
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	for (cin >> K; K != 0; cin >> K)
-	{
-		for (int i = 0; i < K; ++i)
-			cin >> arr[i];
-		for (int i = 6; i < K; ++i)
-			mask[i] = 1;
+	cin >> L >> C;
+	for (int i = 0; i < C; ++i)
+		cin >> arr[i];
+	sort(arr, arr + C);
 
-		do
-		{
-			for (int i = 0; i < K; ++i)
-				if (!mask[i])
-					cout << arr[i] << ' ';
-			cout << '\n';
-		} while (next_permutation(mask, mask + K));
-		cout << '\n';
-	}
+	func(0, 0, 0, 0);
 }
