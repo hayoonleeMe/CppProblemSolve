@@ -3,6 +3,7 @@ using namespace std;
 
 int N, M;
 int arr[10];
+int mask[10];
 
 // next_permutation 사용
 int main()
@@ -14,11 +15,14 @@ int main()
 		cin >> arr[i];
 	sort(arr, arr + N);
 
+	for (int i = M; i < N; ++i)
+		mask[i] = 1;
+
 	do
 	{
-		for (int i = 0; i < M; ++i)
-			cout << arr[i] << ' ';
+		for (int i = 0; i < N; ++i)
+			if (!mask[i])
+				cout << arr[i] << ' ';
 		cout << '\n';
-		reverse(arr + M, arr + N);
-	} while (next_permutation(arr, arr + N));
+	} while (next_permutation(mask, mask + N));
 }
