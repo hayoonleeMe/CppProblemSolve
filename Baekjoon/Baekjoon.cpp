@@ -3,31 +3,9 @@ using namespace std;
 
 int L, C;
 char arr[20];
-char seq[20];
+int mask[20];
 
-void func(int k, int st, int v, int c)
-{
-	if (k == L)
-	{
-		if (v >= 1 && c >= 2)
-		{
-			for (int i = 0; i < L; ++i)
-				cout << seq[i];
-			cout << '\n';
-		}
-		return;
-	}
-
-	for (int i = st; i < C; ++i)
-	{
-		seq[k] = arr[i];
-		if (seq[k] == 'a' || seq[k] == 'e' || seq[k] == 'i' || seq[k] == 'o' || seq[k] == 'u')
-			func(k + 1, i + 1, v + 1, c);
-		else
-			func(k + 1, i + 1, v, c + 1);
-	}
-}
-
+// next_permutation 사용
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
@@ -37,5 +15,31 @@ int main()
 		cin >> arr[i];
 	sort(arr, arr + C);
 
-	func(0, 0, 0, 0);
+	for (int i = L; i < C; ++i)
+		mask[i] = 1;
+
+	do
+	{
+		// 모음 자음 개수 체크
+		int v = 0, c = 0;
+		for (int i = 0; i < C; ++i)
+		{
+			if (!mask[i])
+			{
+				if (arr[i] == 'a' || arr[i] == 'e' || arr[i] == 'i' || arr[i] == 'o' || arr[i] == 'u')
+					++v;
+				else
+					++c;
+			}
+			
+		}
+		// 출력
+		if (v >= 1 && c >= 2)
+		{
+			for (int i = 0; i < C; ++i)
+				if (!mask[i])
+					cout << arr[i];
+			cout << '\n';
+		}
+	} while (next_permutation(mask, mask + C));
 }
