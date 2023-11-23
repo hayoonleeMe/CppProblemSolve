@@ -1,45 +1,38 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int L, C;
-char arr[20];
-int mask[20];
+int T, N, ans;
 
-// next_permutation 사용
+void func(int k, int tot)
+{
+	if (k > N)
+		return;
+
+	if (tot == N)
+	{
+		++ans;
+		return;
+	}
+
+	for (int i : {1, 2, 3})
+	{
+		func(k + 1, tot + i);
+	}
+}
+
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> L >> C;
-	for (int i = 0; i < C; ++i)
-		cin >> arr[i];
-	sort(arr, arr + C);
+	cin >> T;
 
-	for (int i = L; i < C; ++i)
-		mask[i] = 1;
-
-	do
+	while (T--)
 	{
-		// 모음 자음 개수 체크
-		int v = 0, c = 0;
-		for (int i = 0; i < C; ++i)
-		{
-			if (!mask[i])
-			{
-				if (arr[i] == 'a' || arr[i] == 'e' || arr[i] == 'i' || arr[i] == 'o' || arr[i] == 'u')
-					++v;
-				else
-					++c;
-			}
-			
-		}
-		// 출력
-		if (v >= 1 && c >= 2)
-		{
-			for (int i = 0; i < C; ++i)
-				if (!mask[i])
-					cout << arr[i];
-			cout << '\n';
-		}
-	} while (next_permutation(mask, mask + C));
+		cin >> N;
+		ans = 0;
+
+		func(0, 0);
+
+		cout << ans << '\n';
+	}
 }
