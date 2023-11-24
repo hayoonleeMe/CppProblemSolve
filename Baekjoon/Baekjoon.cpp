@@ -1,60 +1,95 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-#define X first
-#define Y second
 int dx[4] = { -1, 0, 1, 0 };
 int dy[4] = { 0, 1, 0, -1 };
-int N, M;
-int board[1002][1002];
-int dist[1002][1002];
+const int N = 5;
+string board[N];
+bool isused[N][N];
+int ans;
+bool visited[N][N];
 queue<pair<int, int>> q;
+
+void func(int k, int s, int x, int y)
+{
+	if (k == 7)
+	{
+		if (s >= 4)
+		{
+			for (int i = 0; i < N; ++i)
+				fill(visited[i], visited[i] + N, 0);
+
+			q.push({ x, y });
+			visited[x][y] = 1;
+			while (!q.empty())
+			{
+				pair<int, int> cur = q.front();
+				q.pop();
+
+				for (int i = 0; i < 4; ++i)
+				{
+					int nx = cur.first + dx[i];
+					int ny = cur.second + dy[i];
+
+					if (nx < 0 || nx >= N || ny < 0 || ny >= N)
+						continue;
+					if (visited[nx][ny] == 1 || isused[nx][ny] == 0)
+						continue;
+
+					visited[nx][ny] = 1;
+					q.push({ nx, ny });
+				}
+			}
+
+			for (int i = 0; i < N; ++i)
+			{
+				for (int j = 0; j < N; ++j)
+				{
+					if (isused[i][j] && !visited[i][j])
+						return;
+				}
+			}
+
+			++ans;
+		}
+
+		return;
+	}
+
+	bool nearby = false;
+	bool first = true;
+	for (int i = x; i < N; ++i)
+	{
+		int j = first ? y : 0;
+		first = false;
+		for (; j < N; ++j)
+		{
+			if (isused[i][j])
+				continue;
+
+			isused[i][j] = 1;
+			int nx = i + (j + 1) / N;
+			int ny = (j + 1) % N;
+			int ns = s + (board[i][j] == 'S' ? 1 : 0);
+			if (k + 1 == 7)
+			{
+				nx = i;
+				ny = j;
+			}
+			func(k + 1, ns, nx, ny);
+			isused[i][j] = 0;
+		}
+	}
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
 	for (int i = 0; i < N; ++i)
-		fill(dist[i], dist[i] + M, -1);
+		cin >> board[i];
 
-	for (int i = 0; i < N; ++i)
-		for (int j = 0; j < M; ++j)
-		{
-			cin >> board[i][j];
-			if (board[i][j] == 2)
-			{
-				dist[i][j] = 0;
-				q.push({ i, j });
-			}
-			else if (board[i][j] == 0)
-				dist[i][j] = 0;
-		}
+	func(0, 0, 0, 0);
 
-	while (!q.empty())
-	{
-		auto cur = q.front();
-		q.pop();
-
-		for (int i = 0; i < 4; ++i)
-		{
-			int nx = cur.X + dx[i];
-			int ny = cur.Y + dy[i];
-
-			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
-				continue;
-			if (dist[nx][ny] >= 0 || board[nx][ny] != 1)
-				continue;
-
-			dist[nx][ny] = dist[cur.X][cur.Y] + 1;
-			q.push({ nx, ny });
-		}
-	}
-
-	for (int i = 0; i < N; ++i)
-	{
-		for (int j = 0; j < M; ++j)
-			cout << dist[i][j] << ' ';
-		cout << '\n';
-	}
+	cout << ans;
 }
