@@ -2,30 +2,7 @@
 using namespace std;
 
 int N;
-string arr[52];
-
-bool cmp(const string& a, const string& b)
-{
-	if (a.size() != b.size()) 
-		return a.size() < b.size();
-	else
-	{
-		int na = 0;
-		for (char c : a)
-			if (isdigit(c))
-				na += int(c - '0');
-
-		int nb = 0;
-		for (char c : b)
-			if (isdigit(c))
-				nb += int(c - '0');
-
-		if (na != nb)
-			return na < nb;
-		else
-			return a < b;
-	}
-}
+long long arr[100002];
 
 int main()
 {
@@ -35,8 +12,25 @@ int main()
 	for (int i = 0; i < N; ++i)
 		cin >> arr[i];
 
-	sort(arr, arr + N, cmp);
+	sort(arr, arr + N);
 
-	for (int i = 0; i < N; ++i)
-		cout << arr[i] << '\n';
+	int cnt = 1, maxCnt = 0;
+	long long maxValue = arr[0];
+	for (int i = 1; i < N; ++i)
+	{
+		if (arr[i - 1] == arr[i])
+			++cnt;
+
+		if (arr[i - 1] != arr[i] || i == N - 1)
+		{
+			if (cnt > maxCnt)
+			{
+				maxCnt = cnt;
+				maxValue = arr[i - 1];
+			}
+			cnt = 1;
+		}
+	}
+
+	cout << maxValue;
 }
