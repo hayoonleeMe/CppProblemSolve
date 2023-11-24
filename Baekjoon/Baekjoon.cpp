@@ -1,38 +1,33 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int T, N, ans;
-
-void func(int k, int tot)
-{
-	if (k > N)
-		return;
-
-	if (tot == N)
-	{
-		++ans;
-		return;
-	}
-
-	for (int i : {1, 2, 3})
-	{
-		func(k + 1, tot + i);
-	}
-}
+int N, M;
+int arr[100004];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> T;
+	cin >> N >> M;
 
-	while (T--)
+	for (int i = 1; i <= N; ++i)
 	{
-		cin >> N;
-		ans = 0;
+		int n;
+		cin >> n;
+		if (i > 1)
+			arr[i] = n + arr[i - 1];
+		else
+			arr[i] = n;
+	}
 
-		func(0, 0);
+	while (M--)
+	{
+		int i, j;
+		cin >> i >> j;
 
-		cout << ans << '\n';
+		if (i == 1)
+			cout << arr[j] << '\n';
+		else
+			cout << arr[j] - arr[i - 1] << '\n';
 	}
 }
