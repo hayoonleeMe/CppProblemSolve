@@ -1,25 +1,28 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int T;
-int d[12];
+int N;
+int s[305];
+int d[305][3];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	d[1] = 1;
-	d[2] = 2;
-	d[3] = 4;
+	cin >> N;
+	for (int i = 1; i <= N; ++i)
+		cin >> s[i];
 
-	for (int n = 4; n <= 11; ++n)
-		d[n] = d[n - 3] + d[n - 2] + d[n - 1];
+	d[1][1] = s[1]; 
+	d[1][2] = s[1];
+	d[2][1] = s[2];
+	d[2][2] = s[2] + s[1];
 
-	cin >> T;
-	while (T--)
+	for (int i = 3; i <= N; ++i)
 	{
-		int n;
-		cin >> n;
-		cout << d[n] << '\n';
+		d[i][2] = d[i - 1][1] + s[i];
+		d[i][1] = s[i] + max(d[i - 2][1], d[i - 2][2]);
 	}
+
+	cout << max(d[N][1], d[N][2]);
 }
