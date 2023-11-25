@@ -1,8 +1,8 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-long long arr[100002];
+int N; 
+vector<long long> v;
 
 int main()
 {
@@ -10,27 +10,15 @@ int main()
 
 	cin >> N;
 	for (int i = 0; i < N; ++i)
-		cin >> arr[i];
-
-	sort(arr, arr + N);
-
-	int cnt = 1, maxCnt = 0;
-	long long maxValue = arr[0];
-	for (int i = 1; i < N; ++i)
 	{
-		if (arr[i - 1] == arr[i])
-			++cnt;
-
-		if (arr[i - 1] != arr[i] || i == N - 1)
-		{
-			if (cnt > maxCnt)
-			{
-				maxCnt = cnt;
-				maxValue = arr[i - 1];
-			}
-			cnt = 1;
-		}
+		string s;
+		cin >> s;
+		reverse(s.begin(), s.end());
+		// 변환한 값이 정수 범위를 초과 한다면 std::out_or_range 를 던진다.
+		v.push_back(stoll(s));
 	}
 
-	cout << maxValue;
+	sort(v.begin(), v.end());
+	for (long long n : v)
+		cout << n << '\n';
 }
