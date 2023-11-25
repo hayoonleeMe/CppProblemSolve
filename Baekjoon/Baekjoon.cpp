@@ -1,24 +1,46 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int arr[100005], d[100005];
+int N;
+int d[1000005];
+int pre[1000005];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-	for (int i = 1; i <= N; ++i)
+	cin >> N;
+
+	for (int i = 2; i <= N; ++i)
 	{
-		cin >> arr[i];
-		d[i] = d[i - 1] + arr[i];
+		d[i] = d[i - 1] + 1;
+		pre[i] = i - 1;
+
+		if (i % 2 == 0)
+		{
+			if (d[i / 2] + 1 < d[i])
+			{
+				pre[i] = i / 2;
+				d[i] = d[i / 2] + 1;
+			}
+		}
+		if (i % 3 == 0)
+		{
+			if (d[i / 3] + 1 < d[i])
+			{
+				pre[i] = i / 3;
+				d[i] = d[i / 3] + 1;
+			}
+		}
 	}
 
-	while (M--)
+	cout << d[N] << '\n';
+	int i = N;
+	while (1)
 	{
-		int i, j;
-		cin >> i >> j;
-		cout << d[j] - d[i - 1] << '\n';
+		cout << i << ' ';
+		if (i == 1)
+			break;
+		i = pre[i];
 	}
 }
