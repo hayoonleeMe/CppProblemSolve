@@ -1,21 +1,24 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int d[1005];
-const int mod = 10007;
+int N, M;
+int arr[100005], d[100005];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	int N;
-	cin >> N;
+	cin >> N >> M;
+	for (int i = 1; i <= N; ++i)
+	{
+		cin >> arr[i];
+		d[i] = d[i - 1] + arr[i];
+	}
 
-	d[1] = 1;
-	d[2] = 2;
-
-	for (int i = 3; i <= N; ++i)
-		d[i] = (d[i - 1] + d[i - 2]) % mod;
-
-	cout << d[N];
+	while (M--)
+	{
+		int i, j;
+		cin >> i >> j;
+		cout << d[j] - d[i - 1] << '\n';
+	}
 }
