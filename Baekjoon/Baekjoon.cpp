@@ -2,17 +2,22 @@
 using namespace std;
 
 int N;
-long long d[100];
+int arr[100005];
+int d[100005];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N;
-	d[1] = 1;
-	d[2] = 1;
-	
-	for (int i = 3; i <= N; ++i)
-		d[i] = d[i - 1] + d[i - 2];
-	cout << d[N];
+	for (int i = 1; i <= N; ++i)
+	{
+		cin >> arr[i];
+		d[i] = arr[i];
+	}
+
+	for (int i = 1; i <= N; ++i)
+		d[i] = max(d[i], d[i - 1] + arr[i]);
+
+	cout << *max_element(d + 1, d + N + 1);
 }
