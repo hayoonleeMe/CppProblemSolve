@@ -2,8 +2,8 @@
 using namespace std;
 
 int N;
-int arr[10005];
-int d[10005];
+int arr[1005];
+int d[1005];
 
 int main()
 {
@@ -11,15 +11,14 @@ int main()
 
 	cin >> N;
 	for (int i = 1; i <= N; ++i)
-		cin >> arr[i];
-
-	d[1] = arr[1];
-	d[2] = arr[1] + arr[2];
-
-	for (int i = 3; i <= N; ++i)
 	{
-		d[i] = max({ d[i - 1], d[i - 2] + arr[i], d[i - 3] + arr[i - 1] + arr[i] }); 
+		cin >> arr[i];
+		d[i] = arr[i];
 	}
+
+	for (int i = 2; i <= N; ++i)
+		for (int j = i - 1; j >= 1; --j)
+			d[i] = max(d[i], d[j] + arr[i - j]);
 
 	cout << d[N];
 }
