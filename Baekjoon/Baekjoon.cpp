@@ -1,36 +1,38 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int T, N;
-int arr[3][100005];
-int d[3][100005];
+int N, M;
+int ans = 1;
+queue<int> q;
+int d[45];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> T;
-	while (T--)
+	d[0] = 1;
+	d[1] = 1;
+	d[2] = 2;
+	for (int i = 3; i <= 40; ++i)
+		d[i] = d[i - 1] + d[i - 2];
+
+	cin >> N >> M;
+	for (int i = 0; i < M; ++i)
 	{
-		cin >> N;
-
-		for (int i = 0; i < 3; ++i)
-			fill(d[i], d[i] + N, 0);
-
-		for (int i = 1; i <= 2; ++i)
-			for (int j = 1; j <= N; ++j)
-				cin >> arr[i][j];
-
-		for (int i = 1; i <= N; ++i)
-		{
-			d[0][i] = max({ d[0][i - 1], d[1][i - 1], d[2][i - 1] });
-			d[1][i] = arr[1][i] + max(d[0][i - 1], d[2][i - 1]);
-			d[2][i] = arr[2][i] + max(d[0][i - 1], d[1][i - 1]);
-		}
-
-		int ans = 0;
-		for (int i = 0; i < 3; ++i)
-			ans = max(ans, d[i][N]);
-		cout << ans << '\n';
+		int t;
+		cin >> t;
+		q.push(t);
 	}
+
+	int s = 0, e;
+	while (!q.empty())
+	{
+		e = q.front();
+		q.pop();
+		ans *= d[e - s - 1];
+		s = e;
+	}
+	ans *= d[N - s];
+
+	cout << ans;
 }
