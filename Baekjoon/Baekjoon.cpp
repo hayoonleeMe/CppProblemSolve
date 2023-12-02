@@ -1,29 +1,22 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int T, W;
-int t[1005];
-int d[1005][35];
+int N, K;
+int a[105];
+int d[10005];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> T >> W;
-	for (int i = 1; i <= T; ++i)
-		cin >> t[i];
+	cin >> N >> K;
+	for (int i = 0; i < N; ++i)
+		cin >> a[i];
 
-	for (int i = 1; i <= T; ++i)
-	{
-		for (int j = 0; j <= W; ++j)
-		{
-			d[i][j] = (t[i] == (j % 2 + 1));
-			if (j != 0)
-				d[i][j] += max(d[i - 1][j], d[i - 1][j - 1]);
-			else
-				d[i][j] += d[i - 1][j];
-		}
-	}
+	d[0] = 1;
+	for (int i = 0; i < N; ++i)
+		for (int j = a[i]; j <= K; ++j)
+			d[j] += d[j - a[i]];
 
-	cout << *max_element(d[T], d[T] + W + 1);
+	cout << d[K];
 }
