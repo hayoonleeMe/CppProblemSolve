@@ -1,38 +1,29 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int ans = 1;
-queue<int> q;
-int d[45];
+int T, W;
+int t[1005];
+int d[1005][35];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	d[0] = 1;
-	d[1] = 1;
-	d[2] = 2;
-	for (int i = 3; i <= 40; ++i)
-		d[i] = d[i - 1] + d[i - 2];
+	cin >> T >> W;
+	for (int i = 1; i <= T; ++i)
+		cin >> t[i];
 
-	cin >> N >> M;
-	for (int i = 0; i < M; ++i)
+	for (int i = 1; i <= T; ++i)
 	{
-		int t;
-		cin >> t;
-		q.push(t);
+		for (int j = 0; j <= W; ++j)
+		{
+			d[i][j] = (t[i] == (j % 2 + 1));
+			if (j != 0)
+				d[i][j] += max(d[i - 1][j], d[i - 1][j - 1]);
+			else
+				d[i][j] += d[i - 1][j];
+		}
 	}
 
-	int s = 0, e;
-	while (!q.empty())
-	{
-		e = q.front();
-		q.pop();
-		ans *= d[e - s - 1];
-		s = e;
-	}
-	ans *= d[N - s];
-
-	cout << ans;
+	cout << *max_element(d[T], d[T] + W + 1);
 }
