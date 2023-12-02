@@ -1,9 +1,8 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-const int SK = 0;
-const int CY = 1;
 int N;
+int d[100005];
 
 int main()
 {
@@ -11,23 +10,22 @@ int main()
 
 	cin >> N;
 
-	int turn = SK;
-	while (1)
+	int p = 0;
+	for (int i = 1; i <= N; ++i)
 	{
-		if (N >= 3)
-			N -= 3;
-		else
-			N -= 1;
-
-		if (N == 0)
+		if (i >= (p + 1) * (p + 1))
 		{
-			if (turn == SK)
-				cout << "SK";
-			else
-				cout << "CY";
-			break;
+			++p;
+			d[p * p] = 1;
+			continue;
 		}
 
-		turn = (turn + 1) % 2;
+		int m = 0x7f7f7f7f;
+		for (int j = p; j > 0; --j)
+			m = min(m, (i / (j * j)) * d[j * j] + d[(i % (j * j))]);
+		if (m != 0x7f7f7f7f)
+			d[i] = m;
 	}
+
+	cout << d[N];
 }
