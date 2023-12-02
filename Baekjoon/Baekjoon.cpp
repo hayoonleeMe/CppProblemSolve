@@ -1,48 +1,33 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
+const int SK = 0;
+const int CY = 1;
 int N;
-int a[1005];
-int d[1005];
-int idx[1005];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
 	cin >> N;
-	for (int i = 1; i <= N; ++i)
-		cin >> a[i];
-	fill(d, d + N + 1, 1);
 
-	for (int i = 2; i <= N; ++i)
+	int turn = SK;
+	while (1)
 	{
-		for (int j = i - 1; j > 0; --j)
+		if (N >= 3)
+			N -= 3;
+		else
+			N -= 1;
+
+		if (N == 0)
 		{
-			if (a[i] > a[j])
-			{
-				if (d[i] < d[j] + 1)
-				{
-					d[i] = d[j] + 1;
-					idx[i] = j;
-				}
-			}
+			if (turn == SK)
+				cout << "SK";
+			else
+				cout << "CY";
+			break;
 		}
-	}
 
-	int* last = max_element(d + 1, d + N + 1);
-	cout << *last << '\n';
-
-	stack<int> s;
-	int lastIdx = last - d;
-	while (lastIdx != 0)
-	{
-		s.push(a[lastIdx]);
-		lastIdx = idx[lastIdx];
-	}
-	while (!s.empty())
-	{
-		cout << s.top() << ' ';
-		s.pop();
+		turn = (turn + 1) % 2;
 	}
 }
