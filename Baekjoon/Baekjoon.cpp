@@ -1,21 +1,26 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-int d[100005];
+int d[1005][1005];
+string A, B;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
+	cin >> A >> B;
+	int an = A.size(), bn = B.size();
 
-	for (int i = 1; i <= N; ++i)
+	for (int i = 1; i <= an; ++i)
 	{
-		d[i] = i;
-		for (int j = 1; j * j <= i; ++j)
-			d[i] = min(d[i], d[i - j * j] + 1);
+		for (int j = 1; j <= bn; ++j)
+		{
+			if (A[i - 1] == B[j - 1])
+				d[i][j] = d[i - 1][j - 1] + 1;
+			else
+				d[i][j] = max(d[i - 1][j], d[i][j - 1]);
+		}
 	}
 
-	cout << d[N];
+	cout << d[an][bn];
 }
