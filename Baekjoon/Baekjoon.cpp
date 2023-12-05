@@ -1,39 +1,29 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-string A;
-int d[5005];
-const int mod = 1000000;
+int N, M, ans;
+int d[1005][1005];
+string a[1005];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> A;
+	cin >> N >> M;
+	for (int i = 0; i < N; ++i)
+		cin >> a[i];
 
-	if (A[0] != '0')
+	for (int i = 1; i <= N; ++i)
 	{
-		d[0] = 1;
-		d[1] = 1;
-	}
-
-	int an = A.size();
-	for (int i = 2; i <= an; ++i)
-	{
-		if (A[i - 1] != '0')
-			d[i] = d[i - 1];
-
-		string s = A.substr(i - 2, 2);
-		int t = stoi(s);
-		if (s[0] != '0' && t >= 1 && t <= 26)
-			d[i] = (d[i] + d[i - 2]) % mod;
-
-		if (d[i] == 0)
+		for (int j = 1; j <= M; ++j)
 		{
-			cout << 0;
-			return 0;
+			if (a[i - 1][j - 1] == '0')
+				continue;
+
+			d[i][j] = 1 + min({ d[i - 1][j], d[i][j - 1], d[i - 1][j - 1] });
+			ans = max(ans, d[i][j]);
 		}
 	}
 
-	cout << d[an];
+	cout << ans * ans;
 }
