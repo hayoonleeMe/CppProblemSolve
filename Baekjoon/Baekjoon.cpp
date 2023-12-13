@@ -1,32 +1,31 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int a[105][105];
+int T, N, M;
+long long d[35][35];
+long long ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-	for (int i = 1; i <= 100; ++i)
-		fill(a[i], a[i] + 101, M);
-
-	while (N--)
+	cin >> T;
+	while (T--)
 	{
-		int x1, y1, x2, y2;
-		cin >> x1 >> y1 >> x2 >> y2;
+		cin >> N >> M;
+		for (int i = 1; i <= N; ++i)
+			fill(d[i] + 1, d[i] + M + 1, 0);
+		for (int i = 1; i <= M; ++i)
+			d[1][i] = 1;
 
-		for (int i = x1; i <= x2; ++i)
-			for (int j = y1; j <= y2; ++j)
-				--a[i][j];
+		for (int i = 2; i <= M; ++i)
+			for (int j = i; j <= M; ++j)
+				for (int k = 1; k < j; ++k)
+					d[i][j] += d[i - 1][k];
+
+		ans = 0;
+		for (int i = 1; i <= M; ++i)
+			ans += d[N][i];
+		cout << ans << '\n';
 	}
-
-	int ans = 0;
-	for (int i = 1; i <= 100; ++i)
-		for (int j = 1; j <= 100; ++j)
-			if (a[i][j] < 0)
-				++ans;
-
-	cout << ans;
 }
