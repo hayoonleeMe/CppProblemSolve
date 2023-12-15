@@ -1,42 +1,38 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int a[2005];
-int d[2005][2005];
+int C1, C2;
+int f[45];
+
+int fib(int n) {
+    if (n == 1 or n == 2)
+    {
+        ++C1;
+        return 1;  // 코드1
+    }
+    else
+        return (fib(n - 1) + fib(n - 2));
+}
+
+void fibonacci(int n) {
+    f[1] = 1;
+    f[2] = 1;
+    for (int i = 3; i <= n; ++i)
+    {
+        ++C2;
+        f[i] = f[i - 1] + f[i - 2]; // 코드2
+    }
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
-	for (int i = 1; i <= N; ++i)
-	{
-		cin >> a[i];
-		d[i][i] = 1;
-	}
+    int n;
+    cin >> n;
 
-	for (int i = 1; i < N; ++i)
-		d[i][i + 1] = a[i] == a[i + 1];
+    fib(n);
+    fibonacci(n);
 
-	for (int k = 3; k <= N; ++k)
-	{
-		int i = 1, j = k;
-		while (j <= N)
-		{
-			if (a[i] == a[j] && d[i + 1][j - 1])
-				d[i][j] = 1;
-			++i;
-			++j;
-		}
-	}
-
-	cin >> M;
-	while (M--)
-	{
-		int s, e;
-		cin >> s >> e;
-
-		cout << d[s][e] << '\n';
-	}
+    cout << C1 << ' ' << C2;
 }
