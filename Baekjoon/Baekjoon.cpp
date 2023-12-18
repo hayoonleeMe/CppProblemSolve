@@ -2,7 +2,8 @@
 using namespace std;
 
 int N;
-int a[100005];
+int a[55];
+int b[55];
 
 int main()
 {
@@ -11,13 +12,14 @@ int main()
 	cin >> N;
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
+	for (int i = 0; i < N; ++i)
+		cin >> b[i];
 	sort(a, a + N);
+	sort(b, b + N);
 
 	int ans = 0;
-	for (int i = 1; i <= N; ++i)
-	{
-		ans = max(ans, a[N - i] * i);
-	}
+	for (int i = 0; i < N; ++i)
+		ans += a[i] * b[N - 1 - i];
 
 	cout << ans;
 }
