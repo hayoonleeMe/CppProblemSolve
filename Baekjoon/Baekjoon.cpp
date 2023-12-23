@@ -9,6 +9,7 @@ int board[105][105];
 int dist[105][105];
 queue<pair<int, int>> q;
 
+// O(N^2)에 가능
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
@@ -18,7 +19,7 @@ int main()
 		for (int j = 0; j < N; ++j)
 			cin >> board[i][j];
 
-	int c = 1;
+	int con = 1;
 	for (int i = 0; i < N; ++i)
 	{
 		for (int j = 0; j < N; ++j)
@@ -27,7 +28,7 @@ int main()
 				continue;
 
 			dist[i][j] = 1;
-			board[i][j] = c;
+			board[i][j] = con;
 			q.push({ i, j });
 
 			while (!q.empty())
@@ -46,55 +47,50 @@ int main()
 						continue;
 
 					dist[nx][ny] = 1;
-					board[nx][ny] = c;
+					board[nx][ny] = con;
 					q.push({ nx, ny });
 				}
 			}
-			++c;
+			++con;
 		}
 	}
 
 	for (int i = 0; i < N; ++i)
 	{
+		fill(dist[i], dist[i] + N, -1);
 		for (int j = 0; j < N; ++j)
+			if (board[i][j] != 0)
+			{
+				dist[i][j] = 0;
+				q.push({ i, j });
+			}
+	}
+
+	while (!q.empty())
+	{
+		pair<int, int> cur = q.front();
+		q.pop();
+
+		for (int dir = 0; dir < 4; ++dir)
 		{
-			if (board[i][j] == 0)
+			int nx = cur.X + dx[dir];
+			int ny = cur.Y + dy[dir];
+
+			if (nx < 0 || nx >= N || ny < 0 || ny >= N)
+				continue;
+			if (board[nx][ny] == board[cur.X][cur.Y])
 				continue;
 
-			for (int k = 0; k < N; ++k)
-				fill(dist[k], dist[k] + N, -1);
-
-			dist[i][j] = 0;
-			q.push({ i, j });
-			int cn = board[i][j];
-
-			while (!q.empty())
+			if (board[nx][ny] != 0)
 			{
-				pair<int, int> cur = q.front();
-				q.pop();
-
-				for (int dir = 0; dir < 4; ++dir)
-				{
-					int nx = cur.X + dx[dir];
-					int ny = cur.Y + dy[dir];
-
-					if (nx < 0 || nx >= N || ny < 0 || ny >= N)
-						continue;
-					if (board[nx][ny] == cn || dist[nx][ny] != -1)
-						continue;
-
-					if (board[nx][ny] != 0)
-					{
-						ans = min(ans, dist[cur.X][cur.Y]);
-					}
-					else
-					{
-						dist[nx][ny] = dist[cur.X][cur.Y] + 1;
-						q.push({ nx, ny });
-					}
-				}
+				ans = min(ans, dist[nx][ny] + dist[cur.X][cur.Y]);
 			}
-			
+			else
+			{
+				board[nx][ny] = board[cur.X][cur.Y];
+				dist[nx][ny] = dist[cur.X][cur.Y] + 1;
+				q.push({ nx, ny });
+			}
 		}
 	}
 
