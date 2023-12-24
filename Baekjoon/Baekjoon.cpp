@@ -1,98 +1,81 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
-#define X first
-#define Y second
-int dx[4] = { 1, 0, -1 ,0 };
+int dx[4] = { 1, 0, -1, 0 };
 int dy[4] = { 0, 1, 0, -1 };
-int N, ans = 0x7f7f7f7f;
-int board[105][105];
-int dist[105][105];
-queue<pair<int, int>> q;
+int N, M;
+string board[1005];
+int dist[1005][1005];
+// x, y, 벽 부순 횟수
+queue<tuple<int, int, int>> q;
+queue<tuple<int, int, int>> wq;
 
-// O(N^2)에 가능
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
-	for (int i = 0; i < N; ++i)
-		for (int j = 0; j < N; ++j)
-			cin >> board[i][j];
-
-	int con = 1;
+	cin >> N >> M;
 	for (int i = 0; i < N; ++i)
 	{
-		for (int j = 0; j < N; ++j)
-		{
-			if (dist[i][j] == 1 || board[i][j] == 0)
-				continue;
-
-			dist[i][j] = 1;
-			board[i][j] = con;
-			q.push({ i, j });
-
-			while (!q.empty())
-			{
-				pair<int, int> cur = q.front();
-				q.pop();
-
-				for (int dir = 0; dir < 4; ++dir)
-				{
-					int nx = cur.X + dx[dir];
-					int ny = cur.Y + dy[dir];
-
-					if (nx < 0 || nx >= N || ny < 0 || ny >= N)
-						continue;
-					if (dist[nx][ny] == 1 || board[nx][ny] == 0)
-						continue;
-
-					dist[nx][ny] = 1;
-					board[nx][ny] = con;
-					q.push({ nx, ny });
-				}
-			}
-			++con;
-		}
+		cin >> board[i];
+		fill(dist[i], dist[i] + M, -1);
 	}
 
-	for (int i = 0; i < N; ++i)
-	{
-		fill(dist[i], dist[i] + N, -1);
-		for (int j = 0; j < N; ++j)
-			if (board[i][j] != 0)
-			{
-				dist[i][j] = 0;
-				q.push({ i, j });
-			}
-	}
+	dist[0][0] = 1;
+	q.push({ 0, 0, 0 });
 
 	while (!q.empty())
 	{
-		pair<int, int> cur = q.front();
+		int x, y, cnt;
+		tie(x, y, cnt) = q.front();
 		q.pop();
 
 		for (int dir = 0; dir < 4; ++dir)
 		{
-			int nx = cur.X + dx[dir];
-			int ny = cur.Y + dy[dir];
+			int nx = x + dx[dir];
+			int ny = y + dy[dir];
 
-			if (nx < 0 || nx >= N || ny < 0 || ny >= N)
+			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
 				continue;
-			if (board[nx][ny] == board[cur.X][cur.Y])
+			if (dist[nx][ny] != -1)
 				continue;
 
-			if (board[nx][ny] != 0)
+			if (board[nx][ny] == '0')
 			{
-				ans = min(ans, dist[nx][ny] + dist[cur.X][cur.Y]);
+				dist[nx][ny] = dist[x][y] + 1;
+				q.push({ nx, ny, cnt });
 			}
-			else
+			else if (board[nx][ny] == '1')
 			{
-				board[nx][ny] = board[cur.X][cur.Y];
-				dist[nx][ny] = dist[cur.X][cur.Y] + 1;
-				q.push({ nx, ny });
+				dist[nx][ny] = dist[x][y] + 1;
+				wq.push({ nx, ny, cnt + 1 });
 			}
 		}
 	}
 
-	cout << ans;
+	while (!wq.empty())
+	{
+		int x, y, cnt;
+		tie(x, y, cnt) = wq.front();
+		wq.pop();
+
+		for (int dir = 0; dir < 4; ++dir)
+		{
+			int nx = x + dx[dir];
+			int ny = y + dy[dir];
+
+			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
+				continue;
+
+			if (board[nx][ny] == '0')
+			{
+				if (dist[nx][ny] == -1 || dist[x][y] + 1 < dist[nx][ny])
+				{
+					dist[nx][ny] = dist[x][y] + 1;
+					wq.push({ nx, ny, cnt });
+				}
+			}
+		}
+	}
+
+	cout << dist[N - 1][M - 1];
 }
