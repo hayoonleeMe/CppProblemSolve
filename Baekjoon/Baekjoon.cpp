@@ -1,62 +1,53 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
-int dx[4] = { 1, 0, -1, 0 };
-int dy[4] = { 0, 1, 0, -1 };
-int N, M, K;
-string board[1005];
-int dist[1005][1005][15];
-queue<tuple<int, int, int>> q;
-
-int bfs();
+const int CYCLE = -1;
+const int NOT_VIS = 0;
+int T, n;
+int a[100001];
+int vis[100001];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M >> K;
-	for (int i = 0; i < N; ++i)
+	cin >> T;
+	while (T--)
 	{
-		cin >> board[i];
-		for (int j = 0; j < M; ++j)
-			fill(dist[i][j], dist[i][j] + K + 1, -1);
-	}
+		cin >> n;
+		for (int j = 1; j <= n; ++j)
+			cin >> a[j];
+		fill(vis + 1, vis + n + 1, NOT_VIS);
 
-	cout << bfs();
-}
-
-int bfs()
-{
-	dist[0][0][0] = 1;
-	q.push({ 0, 0, 0 });
-
-	while (!q.empty())
-	{
-		int x, y, broken;
-		tie(x, y, broken) = q.front();
-		if (x == N - 1 && y == M - 1)
-			return dist[x][y][broken];
-		q.pop();
-
-		for (int dir = 0; dir < 4; ++dir)
+		for (int j = 1; j <= n; ++j)
 		{
-			int nx = x + dx[dir];
-			int ny = y + dy[dir];
-
-			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
+			if (vis[j] != NOT_VIS)
 				continue;
 
-			if (board[nx][ny] == '0' && dist[nx][ny][broken] == -1)
+			int cur = j;
+			while (1)
 			{
-				dist[nx][ny][broken] = dist[x][y][broken] + 1;
-				q.push({ nx, ny, broken });
-			}
-			else if (board[nx][ny] == '1' && broken <= K && dist[nx][ny][broken + 1] == -1)
-			{
-				dist[nx][ny][broken + 1] = dist[x][y][broken] + 1;
-				q.push({ nx, ny, broken + 1 });
+				vis[cur] = j;
+				cur = a[cur];
+				if (vis[cur] == j)
+				{
+					while (vis[cur] != CYCLE)
+					{
+						vis[cur] = CYCLE;
+						cur = a[cur];
+					}
+					break;
+				}
+
+				if (vis[cur] != NOT_VIS)
+					break;
 			}
 		}
-	}
 
-	return -1;
+		int ans = 0;
+		for (int j = 1; j <= n; ++j)
+			if (vis[j] != CYCLE)
+				++ans;
+
+		cout << ans << '\n';
+	}
 }
