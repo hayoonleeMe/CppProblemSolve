@@ -1,36 +1,41 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int A, K;
-int dist[1000005];
+int n, s;
+int a[100005];
+bool vis[100005];
 queue<int> q;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> A >> K;
-	fill(dist, dist + 1000005, -1);
+	cin >> n;
+	for (int i = 1; i <= n; ++i)
+		cin >> a[i];
+	cin >> s;
 
-	dist[A] = 0;
-	q.push(A);
+	vis[s] = 1;
+	q.push(s);
 
+	int cnt = 1;
 	while (!q.empty())
 	{
 		int cur = q.front();
 		q.pop();
 
-		for (int nx : { cur + 1, cur * 2 })
+		for (int nx : { cur + a[cur], cur - a[cur] })
 		{
-			if (nx > 1000005)
+			if (nx <= 0 || nx > n)
 				continue;
-			if (dist[nx] != -1)
+			if (vis[nx] != 0)
 				continue;
 
-			dist[nx] = dist[cur] + 1;
+			vis[nx] = 1;
 			q.push(nx);
+			++cnt;
 		}
 	}
 
-	cout << dist[K];
+	cout << cnt;
 }
