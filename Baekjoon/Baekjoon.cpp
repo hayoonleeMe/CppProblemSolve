@@ -4,75 +4,56 @@ using namespace std;
 #define Y second
 int dx[4] = { 1, 0, -1, 0 };
 int dy[4] = { 0, 1, 0, -1 };
-int N, M, P;
-int S[12];
-string board[1005];
-bool vis[1005][1005];
-// x y cnt
-queue<tuple<int, int, int>> q[12];
-int ans[12];
+int N, M;
+string board[105];
+// 벽뿌 횟수, -1이면 미방문
+int cnt[105][105];
+deque<pair<int, int>> dq;
 
+// 0-1 BFS
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M >> P;
-	for (int i = 1; i <= P; ++i)
-		cin >> S[i];
+	cin >> M >> N;
 	for (int i = 0; i < N; ++i)
 	{
+		fill(cnt[i], cnt[i] + M, -1);
 		cin >> board[i];
-		for (int j = 0; j < M; ++j)
-		{
-			if (board[i][j] != '#' && board[i][j] != '.')
-			{
-				vis[i][j] = 1;
-				q[board[i][j] - '0'].push({ i, j, 0 });
-				++ans[board[i][j] - '0'];
-			}
-		}
 	}
 
-	while (1)
+	cnt[0][0] = 0;
+	dq.push_back({ 0, 0 });
+
+	while (!dq.empty())
 	{
-		bool quit = true;
-		for (int i = 1; i <= P; ++i)
+		pair<int, int> cur = dq.front();
+		dq.pop_front();
+
+		for (int dir = 0; dir < 4; ++dir)
 		{
-			queue<tuple<int, int, int>> nextQ;
-			while (!q[i].empty())
+			int nx = cur.X + dx[dir];
+			int ny = cur.Y + dy[dir];
+
+			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
+				continue;
+			if (cnt[nx][ny] != -1)
+				continue;
+
+			// 벽X
+			if (board[nx][ny] == '0')
 			{
-				int x, y, cnt;
-				tie(x, y, cnt) = q[i].front();
-				q[i].pop();
-				if (cnt == S[i])
-				{
-					nextQ.push({ x, y, 0 });
-					continue;
-				}
-
-				for (int dir = 0; dir < 4; ++dir)
-				{
-					int nx = x + dx[dir];
-					int ny = y + dy[dir];
-					int ncnt = cnt + 1;
-
-					if (nx < 0 || nx >= N || ny < 0 || ny >= M)
-						continue;
-					if (vis[nx][ny] || board[nx][ny] == '#')
-						continue;
-
-					vis[nx][ny] = 1;
-					q[i].push({ nx, ny, ncnt });
-					++ans[i];
-					quit = false;
-				}
+				cnt[nx][ny] = cnt[cur.X][cur.Y];
+				dq.push_front({ nx, ny });
 			}
-			q[i] = nextQ;
+			// 벽O
+			else
+			{
+				cnt[nx][ny] = cnt[cur.X][cur.Y] + 1;
+				dq.push_back({ nx, ny });
+			}
 		}
-		if (quit)
-			break;
 	}
 
-	for (int i = 1; i <= P; ++i)
-		cout << ans[i] << ' ';
+	cout << cnt[N - 1][M - 1];
 }
