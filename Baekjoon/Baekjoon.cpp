@@ -5,55 +5,74 @@ using namespace std;
 int dx[4] = { 1, 0, -1, 0 };
 int dy[4] = { 0, 1, 0, -1 };
 int N, M;
-string board[105];
-// 벽뿌 횟수, -1이면 미방문
-int cnt[105][105];
-deque<pair<int, int>> dq;
+// [{1,1}, {N,N}]
+vector<pair<int, int>> board[105][105];
+bool light[105][105];
+bool vis[105][105];
+queue<pair<int, int>> q;
+int x, y, a, b;
 
-// 0-1 BFS
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> M >> N;
-	for (int i = 0; i < N; ++i)
+	cin >> N >> M;
+	while (M--)
 	{
-		fill(cnt[i], cnt[i] + M, -1);
-		cin >> board[i];
+		cin >> x >> y >> a >> b;
+		board[x][y].push_back({ a, b });
 	}
 
-	cnt[0][0] = 0;
-	dq.push_back({ 0, 0 });
+	// 1,1
+	light[1][1] = 1;
+	vis[1][1] = 1;
+	q.push({ 1, 1 });
 
-	while (!dq.empty())
+	while (!q.empty())
 	{
-		pair<int, int> cur = dq.front();
-		dq.pop_front();
+		pair<int, int> cur = q.front();
+		q.pop();
 
+		// 스위치 모두 켜기
+		for (const pair<int, int>& s : board[cur.X][cur.Y])
+		{
+			if (vis[s.X][s.Y])
+				continue;
+
+			// 인접 체크
+			for (int dir = 0; dir < 4; ++dir)
+			{
+				if (vis[s.X + dx[dir]][s.Y + dy[dir]])
+				{
+					vis[s.X][s.Y] = 1;
+					q.push({ s.X, s.Y });
+					break;
+				}
+			}
+			light[s.X][s.Y] = 1;
+		}
+
+		// 이동
 		for (int dir = 0; dir < 4; ++dir)
 		{
 			int nx = cur.X + dx[dir];
 			int ny = cur.Y + dy[dir];
 
-			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
+			if (nx <= 0 || nx > N || ny <= 0 || ny > N)
 				continue;
-			if (cnt[nx][ny] != -1)
+			if (vis[nx][ny] || !light[nx][ny])
 				continue;
 
-			// 벽X
-			if (board[nx][ny] == '0')
-			{
-				cnt[nx][ny] = cnt[cur.X][cur.Y];
-				dq.push_front({ nx, ny });
-			}
-			// 벽O
-			else
-			{
-				cnt[nx][ny] = cnt[cur.X][cur.Y] + 1;
-				dq.push_back({ nx, ny });
-			}
+			vis[nx][ny] = 1;
+			q.push({ nx, ny });
 		}
 	}
 
-	cout << cnt[N - 1][M - 1];
+	int ans = 0;
+	for (int i = 1; i <= N; ++i)
+		for (int j = 1; j <= N; ++j)
+			if (light[i][j])
+				++ans;
+
+	cout << ans;
 }
