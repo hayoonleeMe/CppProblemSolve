@@ -1,16 +1,10 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
-#define X first
-#define Y second
-int dx[4] = { 1, 0, -1, 0 };
-int dy[4] = { 0, 1, 0, -1 };
+
 int N, M;
-// [{1,1}, {N,N}]
-vector<pair<int, int>> board[105][105];
-bool light[105][105];
-bool vis[105][105];
-queue<pair<int, int>> q;
-int x, y, a, b;
+vector<int> g[105];
+bool vis[105];
+queue<int> q;
 
 int main()
 {
@@ -19,60 +13,34 @@ int main()
 	cin >> N >> M;
 	while (M--)
 	{
-		cin >> x >> y >> a >> b;
-		board[x][y].push_back({ a, b });
+		int a, b;
+		cin >> a >> b;
+		g[a].push_back(b);
+		g[b].push_back(a);
 	}
 
-	// 1,1
-	light[1][1] = 1;
-	vis[1][1] = 1;
-	q.push({ 1, 1 });
+	vis[1] = 1;
+	q.push(1);
 
 	while (!q.empty())
 	{
-		pair<int, int> cur = q.front();
+		int cur = q.front();
 		q.pop();
 
-		// 스위치 모두 켜기
-		for (const pair<int, int>& s : board[cur.X][cur.Y])
+		for (const int& n : g[cur])	 
 		{
-			if (vis[s.X][s.Y])
+			if (vis[n])
 				continue;
 
-			// 인접 체크
-			for (int dir = 0; dir < 4; ++dir)
-			{
-				if (vis[s.X + dx[dir]][s.Y + dy[dir]])
-				{
-					vis[s.X][s.Y] = 1;
-					q.push({ s.X, s.Y });
-					break;
-				}
-			}
-			light[s.X][s.Y] = 1;
-		}
-
-		// 이동
-		for (int dir = 0; dir < 4; ++dir)
-		{
-			int nx = cur.X + dx[dir];
-			int ny = cur.Y + dy[dir];
-
-			if (nx <= 0 || nx > N || ny <= 0 || ny > N)
-				continue;
-			if (vis[nx][ny] || !light[nx][ny])
-				continue;
-
-			vis[nx][ny] = 1;
-			q.push({ nx, ny });
+			vis[n] = 1;
+			q.push(n);
 		}
 	}
 
 	int ans = 0;
-	for (int i = 1; i <= N; ++i)
-		for (int j = 1; j <= N; ++j)
-			if (light[i][j])
-				++ans;
+	for (int i = 2; i <= N; ++i)
+		if (vis[i])
+			++ans;
 
 	cout << ans;
 }
