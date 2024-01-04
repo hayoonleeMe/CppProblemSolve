@@ -1,48 +1,79 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
-const int MAX = 100'000;
-int N, K;
-int dist[100005];
-queue<int> q;
-int cnt;
+#define X first
+#define Y second
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
+int N, M;
+int board[105][105];
+int vis[105][105];
+queue<pair<int, int>> q;
+int ans;
+
+void Bfs()
+{
+	while (!q.empty())
+	{
+		pair<int, int> cur = q.front();
+		q.pop();
+
+		for (int dir = 0; dir < 4; ++dir)
+		{
+			int nx = cur.X + dx[dir];
+			int ny = cur.Y + dy[dir];
+
+			if (nx < 0 || nx >= N || ny < 0 || ny >= M)
+				continue;
+
+			// 치즈면 공기에 접촉하는 횟수 +1
+			if (board[nx][ny] == 1)
+			{
+				++vis[nx][ny];
+			}
+			else if (!vis[nx][ny])
+			{
+				vis[nx][ny] = 1;
+				q.push({ nx, ny });
+			}
+		}
+	}
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> K;
-	fill(dist, dist + 100005, -1);
+	cin >> N >> M;
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < M; ++j)
+			cin >> board[i][j];
 
-	dist[N] = 0;
-	q.push(N);
+	// 초기 vis 업데이트
+	vis[0][0] = 1;
+	q.push({ 0, 0 });
+	Bfs();
 
-	while (!q.empty())
+	while (1)
 	{
-		int cur = q.front();
-		q.pop();
-		if (cur == K)
+		for (int i = 0; i < N; ++i)
 		{
-			++cnt;
-			continue;
-		}
-
-		for (int nxt : { 2 * cur, cur - 1, cur + 1 })
-		{
-			if (nxt < 0 || nxt > MAX)
-				continue;
-
-			if (dist[nxt] == -1 || dist[cur] + 1 <= dist[nxt])
+			for (int j = 0; j < M; ++j)
 			{
-				dist[nxt] = dist[cur] + 1;
-				q.push(nxt);
-			}
-			// 이미 정해진 dist[K]가 최소
-			else if (nxt == K && dist[cur] + 1 == dist[nxt])
-			{
-				q.push(nxt);
+				if (vis[i][j] >= 2)
+				{
+					board[i][j] = 0;
+					vis[i][j] = 1;
+					q.push({ i, j });
+				}
 			}
 		}
+
+		if (q.size() == 0)
+			break;
+
+		++ans;
+		Bfs();
 	}
 
-	cout << dist[K] << '\n' << cnt;
+	cout << ans;
 }
