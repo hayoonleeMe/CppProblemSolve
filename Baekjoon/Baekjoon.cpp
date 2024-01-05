@@ -2,64 +2,86 @@
 using namespace std;
 #define X first
 #define Y second
-int dx[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
-int dy[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-int W, H;
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
+int N, L, R;
 int board[52][52];
 bool vis[52][52];
-queue<pair<int, int>> q;
+int ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
+	cin >> N >> L >> R;
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < N; ++j)
+			cin >> board[i][j];
+
 	while (1)
 	{
-		cin >> W >> H;
-		if (W == 0 && H == 0)
-			break;
-
-		for (int i = 0; i < H; ++i)
+		bool transfer = false;
+		for (int i = 0; i < N; ++i)
 		{
-			fill(vis[i], vis[i] + W, 0);
-			for (int j = 0; j < W; ++j)
-				cin >> board[i][j];
-		}
-			
-		int ans = 0;
-		for (int i = 0; i < H; ++i)
-		{
-			for (int j = 0; j < W; ++j)
+			for (int j = 0; j < N; ++j)
 			{
-				if (vis[i][j] || !board[i][j])
+				if (vis[i][j])
 					continue;
 
-				vis[i][j] = 1;
-				q.push({ i, j });
-				++ans;
+				// 연합 생성
+				vector<pair<int, int>> v;
 
-				while (!q.empty())
+				vis[i][j] = ans + 1;
+				v.push_back({ i, j });
+				int sum = board[i][j], cnt = 1;
+				int idx = 0;
+				while (idx < v.size())
 				{
-					pair<int, int> cur = q.front();
-					q.pop();
+					pair<int, int> cur = v[idx++];
 
-					for (int dir = 0; dir < 8; ++dir)
+					for (int dir = 0; dir < 4; ++dir)
 					{
 						int nx = cur.X + dx[dir];
 						int ny = cur.Y + dy[dir];
 
-						if (nx < 0 || nx >= H || ny < 0 || ny >= W)
-							continue;
-						if (vis[nx][ny] || !board[nx][ny])
+						if (nx < 0 || nx >= N || ny < 0 || ny >= N)
 							continue;
 
-						vis[nx][ny] = 1;
-						q.push({ nx, ny });
+						if (vis[nx][ny])
+							continue;
+
+						int gap = abs(board[cur.X][cur.Y] - board[nx][ny]);
+						if (gap >= L && gap <= R)
+						{
+							sum += board[nx][ny];
+							++cnt;
+
+							vis[nx][ny] = ans + 1;
+							v.push_back({ nx, ny });
+						}
 					}
+				}
+
+				// 인구 이동
+				if (cnt > 1)
+				{
+					int uni = sum / cnt;
+					for (const pair<int, int>& p : v)
+						board[p.X][p.Y] = uni;
+					transfer = true;
 				}
 			}
 		}
 
-		cout << ans << '\n';
+		if (transfer)
+		{
+			++ans;
+			for (int i = 0; i < N; ++i)
+				fill(vis[i], vis[i] + N, 0);
+		}
+		else
+			break;
 	}
+
+	cout << ans;
 }
