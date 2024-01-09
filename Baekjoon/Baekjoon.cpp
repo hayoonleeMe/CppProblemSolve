@@ -2,9 +2,8 @@
 using namespace std;
 
 int N;
-int a[1005];
-int d[1005];
-const int MAX = 0x7f7f7f7f;
+int a[1002];
+int d[1002];
 
 int main()
 {
@@ -12,27 +11,24 @@ int main()
 
 	cin >> N;
 	for (int i = 1; i <= N; ++i)
-		cin >> a[i];
-	fill(d, d + N + 1, MAX);
-	d[1] = 0;
-
-	for (int i = 2; i <= N; ++i)
 	{
-		for (int j = 1; j < i; ++j)
-			if (j + a[j] >= i)
-				d[i] = min(d[i], d[j] + 1);
+		cin >> a[i];
+		d[i] = a[i];
 	}
 
-	if (d[N] == MAX)
-		cout << -1;
-	else
-		cout << d[N];
+	for (int i = 2; i <= N; ++i)
+		for (int j = 1; j <= i / 2; ++j)
+			d[i] = min(d[i], d[j] + d[i - j]);
+
+	cout << d[N];
 }
 
 //10
-//1 2 0 1 3 2 1 5 4 2
-//d[1] = 0
-//d[2] = 1 => 1+1
-//d[3] = 2
-//d[4] = 
-//d[i] = min(d[1]+1, d[2]+1, ..., d[i-1]+1) (단, i번째에 도달할 수 있을 때만)
+//1 1 2 3 5 8 13 21 34 55
+//
+//d[i] : i개 갖기 위해 지불해야 하는 금액 최소
+//d[1] = 1
+//d[2] = min(a[2], d[1]+d[1]) = 1
+//d[3] = min(a[3], d[2]+d[1]) = 2
+//d[4] = min(a[4], d[1]+d[3], d[2]+d[2]) = 2
+//d[i] = min(a[i], d[1]+d[i-1], d[2]+d[i-2], d[i/2][i-i/2])
