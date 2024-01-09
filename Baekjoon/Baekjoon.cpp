@@ -2,8 +2,8 @@
 using namespace std;
 
 int N;
-int a[1002];
-int d[1002];
+int a[102][102];
+long long d[102][102];
 
 int main()
 {
@@ -11,24 +11,37 @@ int main()
 
 	cin >> N;
 	for (int i = 1; i <= N; ++i)
+		for (int j = 1; j <= N; ++j)
+			cin >> a[i][j];
+
+	d[1][1] = 1;
+	for (int i = 1; i <= N; ++i)
 	{
-		cin >> a[i];
-		d[i] = a[i];
+		for (int j = 1; j <= N; ++j)
+		{
+			// x
+			for (int ii = 1; ii < i; ++ii)
+				if (ii + a[ii][j] == i)
+					d[i][j] += d[ii][j];
+			// y
+			for (int jj = 1; jj < j; ++jj)
+				if (jj + a[i][jj] == j)
+					d[i][j] += d[i][jj];
+		}
 	}
 
-	for (int i = 2; i <= N; ++i)
-		for (int j = 1; j <= i / 2; ++j)
-			d[i] = min(d[i], d[j] + d[i - j]);
-
-	cout << d[N];
+	cout << d[N][N];
 }
 
-//10
-//1 1 2 3 5 8 13 21 34 55
+//4
+//2 3 3 1
+//1 2 1 3
+//1 2 3 1
+//3 1 1 0
 //
-//d[i] : i개 갖기 위해 지불해야 하는 금액 최소
-//d[1] = 1
-//d[2] = min(a[2], d[1]+d[1]) = 1
-//d[3] = min(a[3], d[2]+d[1]) = 2
-//d[4] = min(a[4], d[1]+d[3], d[2]+d[2]) = 2
-//d[i] = min(a[i], d[1]+d[i-1], d[2]+d[i-2], d[i/2][i-i/2])
+//1 0 1 0
+//0 0 0 0
+//1 1 0 1
+//1 0 1 3
+//
+//d[i][j] : i행j열 칸까지 올 수 있는 경로의 개수
