@@ -1,49 +1,56 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, K;
-int d[202][202];
-
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> K;
+	string str;
+	cin >> str;
 
-	for (int i = 0; i <= N; ++i)
+	char op = NULL;
+	string s;
+	int ans, temp, c;
+	for (int i = 0; i < str.size(); ++i)
 	{
-		d[i][1] = 1;
-		for (int j = 2; j <= K; ++j)
+		c = str[i];
+		if (c != '-' && c != '+')
+			s.push_back(c);
+		else
 		{
-			for (int k = 0; k <= N; ++k)
+			temp = stoi(s);
+			s.clear();
+
+			if (op == NULL)
 			{
-				d[i][j] = (d[i][j] + d[k][j - 1]) % 1'000'000'000;
+				ans = temp;
+				op = c;
+			}
+			else
+			{
+				// 55 - 50 +
+				if (op == '-')
+					ans -= temp;
+				else
+				{
+					ans += temp;
+					op = c;
+				}
 			}
 		}
 	}
+	// 40
+	temp = stoi(s);
+	if (op == NULL)
+		ans = temp;
+	else
+	{
+		if (op == '-')
+			ans -= temp;
+		else
+			ans += temp;
+	}
 
-	cout << d[N][K];
+	cout << ans;
 }
 
-//20 2
-//d[n][k] : 0부터 N까지의 정수 K개를 더해서 그 합이 N이 되는 경우의 수
-//d[i][j] : 
-//
-//d[0][1] = 0 => 1
-//
-//d[1][1] = 1 => 1
-//
-//d[2][1] = 2 => 1
-//d[2][2] = 0+2, 2+0, 1+1 => 3
-//
-//d[3][1] = 3 => 1
-//d[3][2] = 0+3, 3+0, 1+2, 2+1 => 2
-//
-//d[4][1] = 4 => 1
-//d[4][2] = 0+4, 4+0, 1+3, 3+1, 2+2 => 5
-//=> d[0][1] + d[4][1] + d[1][1] + d[3][1] + d[2][1] = 5
-//
-//~
-//
-//d[20][1] = 1
-//d[20][2] = 0+20, 1+19,, 2+18, 3+17, 4+16, 5+15, 6+14, 7+13, 8+12, 9+11 * 2 + 10+10
