@@ -2,9 +2,8 @@
 using namespace std;
 
 int N, M;
-string A[52];
-string B[52];
-int ans;
+long long ans;
+priority_queue<long long, vector<long long>, greater<long long>> pq;
 
 int main()
 {
@@ -12,44 +11,27 @@ int main()
 
 	cin >> N >> M;
 	for (int i = 0; i < N; ++i)
-			cin >> A[i];
-
-	for (int i = 0; i < N; ++i)
-		cin >> B[i];
-
-	for (int i = 0; i < N; ++i)
 	{
-		for (int j = 0; j < M; ++j)
-		{ 
-			if (A[i][j] != B[i][j])
-			{
-				++ans;
-				for (int ii = i; ii < i + 3; ++ii)
-				{
-					for (int jj = j; jj < j + 3; ++jj)
-					{
-						if (ii >= N || jj >= M)
-						{
-							cout << -1;
-							return 0;
-						}
-						A[ii][jj] = (A[ii][jj] == '1') ? '0' : '1';
-					}
-				}
-			}
-		}
+		int t;
+		cin >> t;
+		pq.push(t);
 	}
 
-	for (int i = 0; i < N; ++i)
+	while (M--)
 	{
-		for (int j = 0; j < M; ++j)
-		{
-			if (A[i][j] != B[i][j])
-			{
-				cout << -1;
-				return 0;
-			}
-		}
+		long long a = pq.top();
+		pq.pop();
+		long long b = pq.top();
+		pq.pop();
+
+		pq.push(a + b);
+		pq.push(a + b);
+	}
+	
+	while (!pq.empty())
+	{
+		ans += pq.top();
+		pq.pop();
 	}
 
 	cout << ans;
