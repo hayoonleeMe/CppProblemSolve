@@ -1,34 +1,56 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int T, N;
-int a[1'000'002];
+int N, M;
+string A[52];
+string B[52];
+int ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> T;
-	while (T--)
+	cin >> N >> M;
+	for (int i = 0; i < N; ++i)
+			cin >> A[i];
+
+	for (int i = 0; i < N; ++i)
+		cin >> B[i];
+
+	for (int i = 0; i < N; ++i)
 	{
-		cin >> N;
-		for (int i = 0; i < N; ++i)
-			cin >> a[i];
-
-		long long ans = 0;
-
-		int mx = a[N - 1];
-		for (int i = N - 2; i >= 0; --i)
-		{
-			if (a[i] < mx)
-				ans += mx - a[i];
-			else
-				mx = a[i];
+		for (int j = 0; j < M; ++j)
+		{ 
+			if (A[i][j] != B[i][j])
+			{
+				++ans;
+				for (int ii = i; ii < i + 3; ++ii)
+				{
+					for (int jj = j; jj < j + 3; ++jj)
+					{
+						if (ii >= N || jj >= M)
+						{
+							cout << -1;
+							return 0;
+						}
+						A[ii][jj] = (A[ii][jj] == '1') ? '0' : '1';
+					}
+				}
+			}
 		}
-		
-		cout << ans << '\n';
 	}
-}
 
-//증가 -> 사고 최대 지점에서 팔기
-//1 1 3 1 2
+	for (int i = 0; i < N; ++i)
+	{
+		for (int j = 0; j < M; ++j)
+		{
+			if (A[i][j] != B[i][j])
+			{
+				cout << -1;
+				return 0;
+			}
+		}
+	}
+
+	cout << ans;
+}
