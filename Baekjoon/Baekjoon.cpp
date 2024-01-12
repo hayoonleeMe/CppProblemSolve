@@ -1,56 +1,34 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
+int T, N;
+int a[1'000'002];
+
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	string str;
-	cin >> str;
-
-	char op = NULL;
-	string s;
-	int ans, temp, c;
-	for (int i = 0; i < str.size(); ++i)
+	cin >> T;
+	while (T--)
 	{
-		c = str[i];
-		if (c != '-' && c != '+')
-			s.push_back(c);
-		else
+		cin >> N;
+		for (int i = 0; i < N; ++i)
+			cin >> a[i];
+
+		long long ans = 0;
+
+		int mx = a[N - 1];
+		for (int i = N - 2; i >= 0; --i)
 		{
-			temp = stoi(s);
-			s.clear();
-
-			if (op == NULL)
-			{
-				ans = temp;
-				op = c;
-			}
+			if (a[i] < mx)
+				ans += mx - a[i];
 			else
-			{
-				// 55 - 50 +
-				if (op == '-')
-					ans -= temp;
-				else
-				{
-					ans += temp;
-					op = c;
-				}
-			}
+				mx = a[i];
 		}
+		
+		cout << ans << '\n';
 	}
-	// 40
-	temp = stoi(s);
-	if (op == NULL)
-		ans = temp;
-	else
-	{
-		if (op == '-')
-			ans -= temp;
-		else
-			ans += temp;
-	}
-
-	cout << ans;
 }
 
+//증가 -> 사고 최대 지점에서 팔기
+//1 1 3 1 2
