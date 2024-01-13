@@ -1,23 +1,33 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-int a[1'000'002];
+int R, C, W;
+int d[52][52];
 int ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
-	for (int i = 1; i <= N; ++i)
-		cin >> a[i];
+	cin >> R >> C >> W;
 
-	a[0] = a[N];
-	for (int i = 0; i < N; ++i)
+	for (int r = 1; r < R + W; ++r)
 	{
-		if (a[i] >= a[i + 1])
-			++ans;
+		for (int c = 1; c <= r; ++c)
+		{
+			if (c == 1 || c == r)
+				d[r][c] = 1;
+			else
+				d[r][c] = d[r - 1][c - 1] + d[r - 1][c];
+		}
+	}
+
+	int cL = C;
+	for (int r = R; r < R + W; ++r)
+	{
+		for (int c = C; c <= cL; ++c)
+			ans += d[r][c];
+		++cL;
 	}
 
 	cout << ans;
