@@ -1,38 +1,41 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-long long ans;
-priority_queue<long long, vector<long long>, greater<long long>> pq;
+int N, s, t;
+pair<int, int> a[200'002];
+priority_queue<int, vector<int>, greater<int>> pq;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
+	cin >> N;
 	for (int i = 0; i < N; ++i)
 	{
-		int t;
-		cin >> t;
-		pq.push(t);
+		cin >> s >> t;
+		a[i] = { s, t };
 	}
 
-	while (M--)
+	sort(a, a + N);
+
+	pq.push(a[0].second);
+
+	for (int i = 1; i < N; ++i)
 	{
-		long long a = pq.top();
-		pq.pop();
-		long long b = pq.top();
-		pq.pop();
-
-		pq.push(a + b);
-		pq.push(a + b);
-	}
-	
-	while (!pq.empty())
-	{
-		ans += pq.top();
-		pq.pop();
+		if (a[i].first >= pq.top())
+		{
+			pq.pop();
+			pq.push(a[i].second);
+		}
+		else
+			pq.push(a[i].second);
 	}
 
-	cout << ans;
+	cout << pq.size();
 }
+
+//1 2 3
+//  2 3 4
+//	  3 4 5
+//	      5 6 7
+//	      5 6
