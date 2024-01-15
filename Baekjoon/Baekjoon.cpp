@@ -1,34 +1,61 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int R, C, W;
-int d[52][52];
-int ans;
+double C;
+int coin;
+int N;
+int a[100'002];
+// i=N, j=스트릭 사용 횟수
+int d[100'002][3];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> R >> C >> W;
+	cin >> C;
+	coin = C / 0.99;
 
-	for (int r = 1; r < R + W; ++r)
+	cin >> N;
+	for (int i = 1; i <= N; ++i)
+		cin >> a[i];
+
+	if (a[1] == 0)
+		d[1][1] = 1;
+	else
+		d[1][0] = 1;
+
+	for (int i = 2; i <= N; ++i)
 	{
-		for (int c = 1; c <= r; ++c)
+		if (a[i] == 0)
 		{
-			if (c == 1 || c == r)
-				d[r][c] = 1;
-			else
-				d[r][c] = d[r - 1][c - 1] + d[r - 1][c];
+			d[i][0] = 0;
+			d[i][1] = d[i - 1][0] + 1;
+			d[i][2] = d[i - 1][1] + 1;
+		}
+		else
+		{
+			d[i][0] = d[i - 1][0] + 1;
+			d[i][1] = d[i - 1][1] + 1;
+			d[i][2] = d[i - 1][2] + 1;
 		}
 	}
 
-	int cL = C;
-	for (int r = R; r < R + W; ++r)
-	{
-		for (int c = C; c <= cL; ++c)
-			ans += d[r][c];
-		++cL;
-	}
+	int ans = 0;
+	for (int i = 1; i <= N; ++i)
+		for (int j = 0; j <= coin; ++j)
+			ans = max(ans, d[i][j]);
 
-	cout << ans;
+	cout << ans << '\n' << *max_element(a, a + N + 1);
 }
+
+//d[i][j] : i번째 날까지 스트릭을 j번 사용했을 때 풀 수 있는 최대 문제 수
+//
+//0이면
+//d[i][0] = 0
+//d[i][1] = d[i-1][0] + 1
+//d[i][2] = d[i-1][1] + 1
+//
+//0이 아니면
+//d[i][0] = d[i-1][0] + 1
+//d[i][1] = d[i-1][1] + 1
+//d[i][2] = d[i-1][2] + 1
