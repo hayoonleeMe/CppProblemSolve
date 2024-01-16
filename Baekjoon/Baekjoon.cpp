@@ -1,9 +1,11 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, A, B;
-pair<int, int> a[102];
-int d[102];
+int N;
+int a[1002];
+int asc[1002];
+int dsc[1002];
+int ans;
 
 int main()
 {
@@ -11,22 +13,33 @@ int main()
 
 	cin >> N;
 	for (int i = 1; i <= N; ++i)
-	{
-		cin >> A >> B;
-		a[i] = { A, B };
-	}
-	sort(a, a + N + 1);
+		cin >> a[i];
 
 	for (int i = 1; i <= N; ++i)
 	{
-		d[i] = 1;
+		asc[i] = 1;
 		for (int j = 1; j < i; ++j)
-		{
-			if (a[i].second > a[j].second)
-				d[i] = max(d[i], d[j] + 1);
-		}
+			if (a[i] > a[j])
+				asc[i] = max(asc[i], asc[j] + 1);
 	}
-	cout << N - *max_element(d, d + N + 1);
+
+	for (int i = N; i >= 1; --i)
+	{
+		dsc[i] = 1;
+		for (int j = N; j > i; --j)
+			if (a[i] > a[j])
+				dsc[i] = max(dsc[i], dsc[j] + 1);
+	}
+
+	for (int i = 1; i <= N; ++i)
+		ans = max(ans, asc[i] + dsc[i] - 1);
+	cout << ans;
 }
 
-//8 2 9 1 4 6 7 10
+//10
+//1 5 2 1 4 3 4 5 2 1
+//
+//asc[i] : 1~i번째까지에서 가장 긴 증가 부분수열 길이
+//dsc[i] : N~i번째까지에서 가장 긴 감소 부분수열 길이
+//
+//asc[i] + dsc[i] - 1(중복)
