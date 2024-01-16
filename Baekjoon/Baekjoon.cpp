@@ -2,10 +2,9 @@
 using namespace std;
 
 int N;
-int a[1002];
-int asc[1002];
-int dsc[1002];
-int ans;
+int board[20][20];
+// i행 j열에 도달하는 경우의수 0:가로 1:세로 2:대각
+int d[20][20][3];
 
 int main()
 {
@@ -13,33 +12,34 @@ int main()
 
 	cin >> N;
 	for (int i = 1; i <= N; ++i)
-		cin >> a[i];
-
+		for (int j = 1; j <= N; ++j)
+			cin >> board[i][j];
+	
+	d[1][2][0] = 1;
 	for (int i = 1; i <= N; ++i)
 	{
-		asc[i] = 1;
-		for (int j = 1; j < i; ++j)
-			if (a[i] > a[j])
-				asc[i] = max(asc[i], asc[j] + 1);
+		for (int j = 3; j <= N; ++j)
+		{
+			// 벽 긁으면 안됨
+			if (board[i][j] != 1)
+			{
+				d[i][j][0] = d[i][j - 1][0] + d[i][j - 1][2];
+				d[i][j][1] = d[i - 1][j][1] + d[i - 1][j][2];
+
+				if (board[i-1][j] != 1 && board[i][j-1] != 1)
+					d[i][j][2] = d[i - 1][j - 1][0] + d[i - 1][j - 1][1] + d[i - 1][j - 1][2];
+			}
+		}
 	}
 
-	for (int i = N; i >= 1; --i)
-	{
-		dsc[i] = 1;
-		for (int j = N; j > i; --j)
-			if (a[i] > a[j])
-				dsc[i] = max(dsc[i], dsc[j] + 1);
-	}
-
-	for (int i = 1; i <= N; ++i)
-		ans = max(ans, asc[i] + dsc[i] - 1);
-	cout << ans;
+	cout << d[N][N][0] + d[N][N][1] + d[N][N][2];
 }
 
-//10
-//1 5 2 1 4 3 4 5 2 1
+//i행 j열 빈칸을 가로, 세로, 대각 파이프의 끝으로 도달하는 경우의수
+//d[i][j][0 or 1 or 2] 0:가로 1:세로 2:대각
 //
-//asc[i] : 1~i번째까지에서 가장 긴 증가 부분수열 길이
-//dsc[i] : N~i번째까지에서 가장 긴 감소 부분수열 길이
+//d[i][j][0] = d[i][j-1][0] + d[i][j-1][2]
 //
-//asc[i] + dsc[i] - 1(중복)
+//d[i][j][1] = d[i-1][j][1] + d[i-1][j][2]
+//
+//d[i][j][2] = d[i-1][j-1][0] + d[i-1][j-1][1]
