@@ -1,41 +1,33 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-int a[3002];
-int ans = -1;
-int gap = 0;
+int N, M, a, b;
+int day[202];
+int page[202];
+int dp[22][202];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
-	for (int i = 0; i < N; ++i)
-		cin >> a[i];
-	sort(a, a + N);
-
-	int start = 0;
-	int end = 1;
-	while (end <= N-1)
+	cin >> N >> M;
+	for (int i = 1; i <= M; ++i)
 	{
-		if (a[start] + 1 == a[end] || a[end] - 1 == a[start])
-		{
-			++start;
-			++end;
-			continue;
-		}
-
-		int half = (a[start] + 1 + a[end] - 1) / 2;
-		if (gap < half - a[start])
-		{
-			gap = half - a[start];
-			ans = half;
-		}
-
-		++start;
-		++end;
+		cin >> a >> b;
+		day[i] = a;
+		page[i] = b;
 	}
 
-	cout << ans;
+	for (int d = 1; d <= N; ++d)
+	{
+		for (int c = 1; c <= M; ++c)
+		{
+			dp[c][d] = dp[c - 1][d];
+
+			if (d >= day[c])
+				dp[c][d] = max(dp[c][d], page[c] + dp[c-1][d-day[c]]);
+		}
+	}
+
+	cout << dp[M][N];
 }
