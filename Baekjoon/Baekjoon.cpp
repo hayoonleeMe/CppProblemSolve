@@ -2,8 +2,9 @@
 using namespace std;
 
 int N;
-int a[102];
-long long d[102][21];
+int a[3002];
+int ans = -1;
+int gap = 0;
 
 int main()
 {
@@ -12,20 +13,29 @@ int main()
 	cin >> N;
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
+	sort(a, a + N);
 
-	d[0][a[0]] = 1;
-	for (int i = 1; i < N - 1; ++i)
+	int start = 0;
+	int end = 1;
+	while (end <= N-1)
 	{
-		for (int j = 0; j <= 20; ++j)
+		if (a[start] + 1 == a[end] || a[end] - 1 == a[start])
 		{
-			if (d[i - 1][j] > 0)
-			{
-				if (j + a[i] <= 20)
-					d[i][j + a[i]] += d[i-1][j];
-				if (j - a[i] >= 0)
-					d[i][j - a[i]] += d[i-1][j];
-			}
+			++start;
+			++end;
+			continue;
 		}
+
+		int half = (a[start] + 1 + a[end] - 1) / 2;
+		if (gap < half - a[start])
+		{
+			gap = half - a[start];
+			ans = half;
+		}
+
+		++start;
+		++end;
 	}
-	cout << d[N - 2][a[N - 1]];
+
+	cout << ans;
 }
