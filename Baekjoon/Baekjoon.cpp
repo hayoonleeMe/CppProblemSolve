@@ -12,11 +12,11 @@ int main()
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
 	sort(a, a + N);
-
+	
 	cin >> M;
 	while (M--)
 	{
 		cin >> target;
-		cout << upper_bound(a, a + N, target) - lower_bound(a, a + N, target) << ' ';
+		cout << binary_search(a, a + N, target) << ' ';
 	}
 }
