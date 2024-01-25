@@ -2,8 +2,8 @@
 using namespace std;
 
 int N;
-int a[1'000'003];
-vector<int> uni;
+int U[1002];
+vector<int> two;
 
 int main()
 {
@@ -11,16 +11,23 @@ int main()
 
 	cin >> N;
 	for (int i = 0; i < N; ++i)
+		cin >> U[i];
+	sort(U, U + N);
+	
+	for (int x = 0; x < N; ++x)
+		for (int y = x; y < N; ++y)
+			two.push_back(U[x] + U[y]);
+	sort(two.begin(), two.end());	
+
+	for (int k = N - 1; k > 0; --k)
 	{
-		cin >> a[i];
-		uni.push_back(a[i]);
+		for (int z = 0; z < k; ++z)
+		{
+			if (binary_search(two.begin(), two.end(), U[k] - U[z]))
+			{
+				cout << U[k];
+				return 0;
+			}
+		}
 	}
-	sort(uni.begin(), uni.end());
-
-	// unique() : 중복되지 않은 값들을 앞으로 몰아주고 나머지는 쓰레기값 들어감, 쓰레기값이 시작되는 구간을 반환
-	// 따라서 모든 쓰레기값을 erase하고 벡터에는 중복되지 않은 값만 남는다.
-	uni.erase(unique(uni.begin(), uni.end()), uni.end());
-
-	for (int i = 0; i < N; ++i)
-		cout << lower_bound(uni.begin(), uni.end(), a[i]) - uni.begin() << ' ';
 }
