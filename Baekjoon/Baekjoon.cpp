@@ -1,39 +1,39 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int K, N;
-int a[10'002];
+int M, N;
+int L[1'000'002];
 
-bool Solve(long long x)
+bool Solve(int x)
 {
 	long long num = 0;
-	for (int i = 0; i < K; ++i)
-		num += a[i] / x;
-	return num >= N;
+	for (int i = 0; i < N; ++i)
+		num += L[i] / x;
+	return num >= M;
 }
 
-// parametric search
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> K >> N;
-	for (int i = 0; i < K; ++i)
-		cin >> a[i];
+	cin >> M >> N;
+	for (int i = 0; i < N; ++i)
+		cin >> L[i];
 
-	long long st = 1;
-	long long en = 0x7fffffff;
+	int st = 1;
+	int en = 1'000'000'000;
 
 	while (st < en)
 	{
-		// st와 en이 1차이 날 때, 무한루프에 빠짐
-		// st=1, en=2, mid = 1, Solve(mid) = true => st =1 => 무한루프
-		//long long mid = (st + en) / 2;
-		long long mid = (st + en + 1) / 2;
+		int mid = (st + en + 1) / 2;
 		if (Solve(mid))
 			st = mid;
 		else
 			en = mid - 1;
 	}
-	cout << st;
+
+	if (Solve(st))
+		cout << st;
+	else
+		cout << 0;
 }
