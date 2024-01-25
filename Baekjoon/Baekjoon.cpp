@@ -1,39 +1,33 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int M, N;
-int L[1'000'002];
-
-bool Solve(int x)
-{
-	long long num = 0;
-	for (int i = 0; i < N; ++i)
-		num += L[i] / x;
-	return num >= M;
-}
+int nA, nB;
+int A[500'002];
+int B[500'002];
+vector<int> ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> M >> N;
-	for (int i = 0; i < N; ++i)
-		cin >> L[i];
+	cin >> nA >> nB;
+	for (int i = 0; i < nA; ++i)
+		cin >> A[i];
+	sort(A, A + nA);
+	for (int i = 0; i < nB; ++i)
+		cin >> B[i];
+	sort(B, B + nB);
 
-	int st = 1;
-	int en = 1'000'000'000;
+	for (int i = 0; i < nA; ++i)
+		if (!binary_search(B, B + nB, A[i]))
+			ans.push_back(A[i]);
 
-	while (st < en)
+	if (ans.size() > 0)
 	{
-		int mid = (st + en + 1) / 2;
-		if (Solve(mid))
-			st = mid;
-		else
-			en = mid - 1;
+		cout << ans.size() << '\n';
+		for (int i = 0; i < ans.size(); ++i)
+			cout << ans[i] << ' ';
 	}
-
-	if (Solve(st))
-		cout << st;
 	else
 		cout << 0;
 }
