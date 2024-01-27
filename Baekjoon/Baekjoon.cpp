@@ -1,29 +1,35 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, A, B, a, b;
-pair<int, int> arr[500'002];
-int ans;
+long long N, K;
+long long a[500'002];
+
+bool Solve(long long x)
+{
+	long long sum = 0;
+	for (int i = 0; i < N; ++i)
+		if (a[i] > x)
+			sum += a[i] - x;
+	return sum <= K;
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> A >> B;
+	cin >> N >> K;
 	for (int i = 0; i < N; ++i)
-	{
-		cin >> a >> b;
-		arr[i] = { a,b };
-	}
-	sort(arr, arr + N);
+		cin >> a[i];
 
-	for (int i = 0; i < N; ++i)
+	long long st = 0;
+	long long en = 1e12;
+	while (st < en)
 	{
-		int oA = arr[i].first;
-		int oB = arr[i].second;
-
-		if (binary_search(arr, arr + N, make_pair(oA + A, oB )) && binary_search(arr, arr + N, make_pair(oA, oB + B)) && binary_search(arr, arr + N, make_pair(oA + A, oB + B)))
-			++ans;
+		long long mid = (st + en) / 2;
+		if (Solve(mid))
+			en = mid;
+		else
+			st = mid + 1;
 	}
-	cout << ans;
+	cout << st;
 }
