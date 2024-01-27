@@ -1,47 +1,36 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M, K;
-pair<int, int> VC[200'002];
+long long X, Y;
+int Z;
 
-bool Solve(int x)
+bool Solve(long long mid)
 {
-	int cnt = 0;
-	int sum = 0;
-	for (int i = 0; i < K; ++i)
-	{
-		if (x >= VC[i].second && cnt < N)
-		{
-			++cnt;
-			sum += VC[i].first;
-		}
-	}
-	if (cnt < N)
-		return false;
-	return sum >= M;
+	int gap = mid - X;
+	int t = (Y + gap) * 100 / mid;
+	return t > Z;
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M >> K;
-	for (int i = 0; i < K; ++i)
-		cin >> VC[i].first >> VC[i].second;
-	sort(VC, VC + K, greater<pair<int, int>>());
+	cin >> X >> Y;
+	Z = Y * 100 / X;
 
-	long long st = 1;
-	long long en = 0x7fffffff;
+	long long st = X + 1;
+	long long en = 2 * X;
 	while (st < en)
 	{
 		long long mid = (st + en) / 2;
+		
 		if (Solve(mid))
 			en = mid;
 		else
 			st = mid + 1;
 	}
 	if (Solve(st))
-		cout << st;
+		cout << st - X;
 	else
 		cout << -1;
 }
