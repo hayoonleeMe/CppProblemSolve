@@ -1,36 +1,43 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-int a[10'002];
-long long total;
+int M, N;
+int a[102][10'002];
+int ans;
 
-bool Solve(long long mid)
+void Compress(int t[])
 {
-	long long sum = 0;
+	vector<int> temp(t, t + N);
+	sort(temp.begin(), temp.end());
+	temp.erase(unique(temp.begin(), temp.end()), temp.end());
+
 	for (int i = 0; i < N; ++i)
-		sum += min((long long)a[i], mid);
-	return sum <= total;
+		t[i] = lower_bound(temp.begin(), temp.end(), t[i]) - temp.begin();
+}
+
+bool Check(int A[], int B[])
+{
+	for (int i = 0; i < N; ++i)
+		if (A[i] != B[i])
+			return false;
+	return true;
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
-	for (int i = 0; i < N; ++i)
-		cin >> a[i];
-	cin >> total;
-
-	long long st = 1;
-	long long en = *max_element(a, a + N);
-	while (st < en)	
+	cin >> M >> N;
+	for (int i = 0; i < M; ++i)
 	{
-		long long mid = (st + en + 1) / 2;
-		if (Solve(mid))
-			st = mid;
-		else
-			en = mid - 1;
+		for (int j = 0; j < N; ++j)
+			cin >> a[i][j];
+		Compress(a[i]);
 	}
-	cout << st;
+
+	for (int i = 0; i < M - 1; ++i)
+		for (int j = i + 1; j < M; ++j)
+			ans += Check(a[i], a[j]);
+
+	cout << ans;
 }
