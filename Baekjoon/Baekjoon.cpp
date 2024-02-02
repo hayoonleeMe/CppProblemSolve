@@ -1,43 +1,39 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int M, N;
-int a[102][10'002];
-int ans;
-
-void Compress(int t[])
-{
-	vector<int> temp(t, t + N);
-	sort(temp.begin(), temp.end());
-	temp.erase(unique(temp.begin(), temp.end()), temp.end());
-
-	for (int i = 0; i < N; ++i)
-		t[i] = lower_bound(temp.begin(), temp.end(), t[i]) - temp.begin();
-}
-
-bool Check(int A[], int B[])
-{
-	for (int i = 0; i < N; ++i)
-		if (A[i] != B[i])
-			return false;
-	return true;
-}
+int N;
+int a[100'002];
+int ans = 0x7fffffff;
+int A, B;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> M >> N;
-	for (int i = 0; i < M; ++i)
+	cin >> N;
+	for (int i = 0; i < N; ++i)
+		cin >> a[i];
+
+	for (int i = 0; i < N; ++i)
 	{
-		for (int j = 0; j < N; ++j)
-			cin >> a[i][j];
-		Compress(a[i]);
+		int st = i + 1;
+		int en = N;
+		while (st < en)
+		{
+			int mid = (st + en) / 2;
+			int sum = a[i] + a[mid];
+			if (abs(sum) < ans)
+			{
+				ans = abs(sum);
+				A = a[i];
+				B = a[mid];
+			}
+
+			if (sum < 0)
+				st = mid + 1;
+			else
+				en = mid;
+		}
 	}
-
-	for (int i = 0; i < M - 1; ++i)
-		for (int j = i + 1; j < M; ++j)
-			ans += Check(a[i], a[j]);
-
-	cout << ans;
+	cout << A << ' ' << B;
 }
