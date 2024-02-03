@@ -1,7 +1,7 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
+int N, S;
 int a[100'002];
 int mn = 0x7fffffff;
 
@@ -9,19 +9,27 @@ int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
+	cin >> N >> S;
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
-	sort(a, a + N);
 
 	int en = 0;
+	int sum = a[0];
 	for (int st = 0; st < N; ++st)
 	{
-		while (en < N && a[en] - a[st] < M)
+		while (en < N && sum < S)
+		{
 			++en;
+			if (en != N)
+				sum += a[en];
+		}
 		if (en == N)
 			break;
-		mn = min(mn, a[en] - a[st]);
+
+		mn = min(mn, en - st + 1);
+		sum -= a[st];
 	}
+	if (mn == 0x7fffffff)
+		mn = 0;
 	cout << mn;
 }
