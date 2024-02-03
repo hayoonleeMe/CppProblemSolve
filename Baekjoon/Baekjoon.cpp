@@ -1,15 +1,15 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, S;
-int a[100'002];
-int mn = 0x7fffffff;
+int N, M;
+int a[10'002];
+long long ans;
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> S;
+	cin >> N >> M;
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
 
@@ -17,19 +17,16 @@ int main()
 	int sum = a[0];
 	for (int st = 0; st < N; ++st)
 	{
-		while (en < N && sum < S)
+		while (en < N && sum < M)
 		{
 			++en;
 			if (en != N)
 				sum += a[en];
 		}
-		if (en == N)
-			break;
 
-		mn = min(mn, en - st + 1);
+		if (sum == M)
+			++ans;
 		sum -= a[st];
 	}
-	if (mn == 0x7fffffff)
-		mn = 0;
-	cout << mn;
+	cout << ans;
 }
