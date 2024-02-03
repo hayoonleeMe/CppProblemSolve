@@ -1,39 +1,45 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N;
-int a[2002];
-int ans;
+int N, C;
+int a[200'002];
 
-void Solve(int i)
+bool Solve(int mid)
 {
-	for (int j = 0; j < N; ++j)
+	int cnt = 1;
+	int curIdx = 0;
+	while (cnt < C)
 	{
-		if (i == j)
-			continue;
-		int search = a[i] - a[j];
-		int idx = lower_bound(a, a + N, search) - a;
-		for (; idx < N && a[idx] == search; ++idx)
+		int nxtIdx = upper_bound(a + curIdx + 1, a + N, a[curIdx] + mid - 1) - a;
+		if (nxtIdx < N)
 		{
-			if (idx != i && idx != j)
-			{
-				++ans;
-				return;
-			}
+			curIdx = nxtIdx;
+			++cnt;
 		}
+		else
+			break;
 	}
+	return cnt >= C;
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N;
+	cin >> N >> C;
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
 	sort(a, a + N);
-
-	for (int i = 0; i < N; ++i)
-		Solve(i);
-	cout << ans;
+	
+	int st = 1;
+	int en = a[N - 1] - a[0];
+	while (st < en)
+	{
+		int mid = (st + en + 1) / 2;
+		if (Solve(mid))
+			st = mid;
+		else
+			en = mid - 1;
+	}
+	cout << st;
 }
