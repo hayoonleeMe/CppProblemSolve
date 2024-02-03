@@ -2,8 +2,8 @@
 using namespace std;
 
 int N;
-int a[100'002];
-int ans = 0x7fffffff;
+int a[10'003];
+long long ans;
 
 int main()
 {
@@ -12,22 +12,14 @@ int main()
 	cin >> N;
 	for (int i = 0; i < N; ++i)
 		cin >> a[i];
+	sort(a, a + N);
 
-	for (int i = 0; i < N; ++i)
+	for (int i = 0; i <= N - 3; ++i)
 	{
-		int st = i + 1;
-		int en = N;
-		while (st < en)
+		for (int j = i + 1; j <= N - 2; ++j)
 		{
-			int mid = (st + en) / 2;
-			int sum = a[i] + a[mid];
-			if (abs(sum) < abs(ans))
-				ans = sum;
-
-			if (sum < 0)
-				st = mid + 1;
-			else
-				en = mid;
+			int search = -(a[i] + a[j]);
+			ans += upper_bound(a + j + 1, a + N, search) - lower_bound(a + j + 1, a + N, search);
 		}
 	}
 	cout << ans;
