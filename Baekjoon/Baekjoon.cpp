@@ -2,8 +2,27 @@
 using namespace std;
 
 int N;
-int a[10'003];
-long long ans;
+int a[2002];
+int ans;
+
+void Solve(int i)
+{
+	for (int j = 0; j < N; ++j)
+	{
+		if (i == j)
+			continue;
+		int search = a[i] - a[j];
+		int idx = lower_bound(a, a + N, search) - a;
+		for (; idx < N && a[idx] == search; ++idx)
+		{
+			if (idx != i && idx != j)
+			{
+				++ans;
+				return;
+			}
+		}
+	}
+}
 
 int main()
 {
@@ -14,13 +33,7 @@ int main()
 		cin >> a[i];
 	sort(a, a + N);
 
-	for (int i = 0; i <= N - 3; ++i)
-	{
-		for (int j = i + 1; j <= N - 2; ++j)
-		{
-			int search = -(a[i] + a[j]);
-			ans += upper_bound(a + j + 1, a + N, search) - lower_bound(a + j + 1, a + N, search);
-		}
-	}
+	for (int i = 0; i < N; ++i)
+		Solve(i);
 	cout << ans;
 }
