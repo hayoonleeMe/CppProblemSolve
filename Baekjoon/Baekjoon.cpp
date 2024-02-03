@@ -4,7 +4,6 @@ using namespace std;
 int N;
 int a[100'002];
 int ans = 0x7fffffff;
-int A, B;
 
 int main()
 {
@@ -22,12 +21,8 @@ int main()
 		{
 			int mid = (st + en) / 2;
 			int sum = a[i] + a[mid];
-			if (abs(sum) < ans)
-			{
-				ans = abs(sum);
-				A = a[i];
-				B = a[mid];
-			}
+			if (abs(sum) < abs(ans))
+				ans = sum;
 
 			if (sum < 0)
 				st = mid + 1;
@@ -35,5 +30,5 @@ int main()
 				en = mid;
 		}
 	}
-	cout << A << ' ' << B;
+	cout << ans;
 }
