@@ -1,86 +1,153 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M, K, R, C;
-int board[42][42];
-int s[12][12];
-int ns[12][12];
+int N;
+int board[22][22];
+vector<int> v(10);
+int ans;
 
-bool check(int nR, int nC, int sr, int sc)
+void func(int k)
 {
-	if (sr + nR > N || sc + nC > M)
-		return false;
-
-	for (int r = 0; r < nR; ++r)
-		for (int c = 0; c < nC; ++c)
-		{
-			if (board[sr + r][sc + c] + ns[r][c] > 1)
-				return false;
-		}
-
-	return true;
-}
-
-bool paste(int nR, int nC)
-{
-	for (int i = 0; i < N; ++i)
+	if (k == 5)
 	{
-		for (int j = 0; j < M; ++j)
-		{
-			if (!check(nR, nC, i, j))
-				continue;
+		int nb[22][22];
+		for (int i = 0; i < N; ++i)
+			for (int j = 0; j < N; ++j)
+				nb[i][j] = board[i][j];
 
-			for (int r = 0; r < nR; ++r)
-				for (int c = 0; c < nC; ++c)
-					board[i + r][j + c] += ns[r][c];
-			return true;
+		for (int k = 0; k < 5; ++k)
+		{
+			if (v[k] == 0)	// right
+			{
+				for (int i = 0; i < N; ++i)
+				{
+					for (int j = N - 1; j > 0;)
+					{
+						int target = j - 1;
+						for (; target >= 0 && nb[i][target] == 0; --target);
+						if (target < 0)
+							break;
+
+						if (nb[i][j] == 0)
+						{
+							swap(nb[i][j], nb[i][target]);
+							continue;
+						}
+
+						if (nb[i][j] == nb[i][target])
+						{
+							nb[i][j] *= 2;
+							nb[i][target] = 0;
+						}
+
+						--j;
+					}
+				}
+			}
+			else if (v[k] == 1)	// down
+			{
+				for (int j = 0; j < N; ++j)
+				{
+					for (int i = N - 1; i > 0;)
+					{
+						int target = i - 1;
+						for (; target >= 0 && nb[target][j] == 0; --target);
+						if (target < 0)
+							break;
+
+						if (nb[i][j] == 0)
+						{
+							swap(nb[i][j], nb[target][j]);
+							continue;
+						}
+
+						if (nb[i][j] == nb[target][j])
+						{
+							nb[i][j] *= 2;
+							nb[target][j] = 0;
+						}
+
+						--i;
+					}
+				}
+			}
+			else if (v[k] == 2) // left
+			{
+				for (int i = 0; i < N; ++i)
+				{
+					for (int j = 0; j < N - 1;)
+					{
+						int target = j + 1;
+						for (; target < N && nb[i][target] == 0; ++target);
+						if (target >= N)
+							break;
+
+						if (nb[i][j] == 0)
+						{
+							swap(nb[i][j], nb[i][target]);
+							continue;
+						}
+
+						if (nb[i][j] == nb[i][target])
+						{
+							nb[i][j] *= 2;
+							nb[i][target] = 0;
+						}
+
+						++j;
+					}
+				}
+			}
+			else if (v[k] == 3) // up
+			{
+				for (int j = 0; j < N; ++j)
+				{
+					for (int i = 0; i < N - 1;)
+					{
+						int target = i + 1;
+						for (; target < N && nb[target][j] == 0; ++target);
+						if (target >= N)
+							break;
+
+						if (nb[i][j] == 0)
+						{
+							swap(nb[i][j], nb[target][j]);
+							continue;
+						}
+
+						if (nb[i][j] == nb[target][j])
+						{
+							nb[i][j] *= 2;
+							nb[target][j] = 0;
+						}
+
+						++i;
+					}
+				}
+			}
 		}
+
+		for (int i = 0; i < N; ++i)
+			ans = max(ans, *max_element(nb[i], nb[i] + N));
+		return;
 	}
-	return false;
+
+	for (int dir = 0; dir < 4; ++dir)
+	{
+		v[k] = dir;
+		func(k + 1);
+	}
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M >> K;
-	while (K--)
-	{
-		cin >> R >> C;
-		for (int r = 0; r < R; ++r)
-			for (int c = 0; c < C; ++c)
-				cin >> s[r][c];
-
-		for (int r = 0; r < R; ++r)
-			for (int c = 0; c < C; ++c)
-				ns[r][c] = s[r][c];
-		int nR = R;
-		int nC = C;
-
-		for (int dir = 0; dir < 4; ++dir)
-		{
-			if (dir != 0)
-			{
-				for (int r = nR - 1; r >= 0; --r)
-					for (int c = 0; c < nC; ++c)
-						ns[c][nR - 1 - r] = s[r][c];
-				swap(nR, nC);
-			}
-
-			// check and paste
-			if (paste(nR, nC))
-				break;
-
-			for (int r = 0; r < nR; ++r)
-				for (int c = 0; c < nC; ++c)
-					s[r][c] = ns[r][c];
-		}
-	}
-
-	int ans = 0;
+	cin >> N;
 	for (int i = 0; i < N; ++i)
-		for (int j = 0; j < M; ++j)
-			if (board[i][j] == 1)
-				++ans;
+		for (int j = 0; j < N; ++j)
+			cin >> board[i][j];
+
+	func(0);
 	cout << ans;
 }
