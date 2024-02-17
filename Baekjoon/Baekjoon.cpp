@@ -1,116 +1,86 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int dx[4] = { 0, 1, 0, -1 };
-int dy[4] = { 1, 0, -1, 0 };
+int N, M, K, R, C;
+int board[42][42];
+int s[12][12];
+int ns[12][12];
 
-int N, M;
-int board[10][10];
-// x, y, num
-vector<tuple<int, int, int>> cctvs;
-// x, y, num, dir
-vector<tuple<int, int, int, int>> chosen(70'000);
-
-int dup[10][10];
-int ans = 0x7fffffff;
-
-void mark(int x, int y, int d)
+bool check(int nR, int nC, int sr, int sc)
 {
-	pair<int, int> cur = { x, y };
-	while (1)
-	{
-		int nx = cur.first + dx[d];
-		int ny = cur.second + dy[d];
+	if (sr + nR > N || sc + nC > M)
+		return false;
 
-		if (nx < 0 || nx >= N || ny < 0 || ny >= M)
-			break;
-		if (dup[nx][ny] == 6)
-			break;
-
-		dup[nx][ny] = 7;
-		cur.first = nx;
-		cur.second = ny;
-	}
-}
-
-void func(int k)
-{
-	if (k == cctvs.size())
-	{
-		for (int i = 0; i < N; ++i)
-			for (int j = 0; j < M; ++j)
-				dup[i][j] = board[i][j];
-
-		for (int i = 0; i < cctvs.size(); ++i)
+	for (int r = 0; r < nR; ++r)
+		for (int c = 0; c < nC; ++c)
 		{
-			int x, y, num, dir;
-			tie(x, y, num, dir) = chosen[i];
-
-			if (num == 1)
-			{
-				int dirs[] = { dir };
-				for (int d : dirs)
-					mark(x, y, d);
-			}
-			else if (num == 2)
-			{
-				int dirs[] = { dir, (dir + 2) % 4 };
-				for (int d : dirs)
-					mark(x, y, d);
-			}
-			else if (num == 3)
-			{
-				int dirs[] = { dir, (dir + 3) % 4 };
-				for (int d : dirs)
-					mark(x, y, d);
-			}
-			else if (num == 4)
-			{
-				int dirs[] = { dir, (dir + 3) % 4, (dir + 2) % 4 };
-				for (int d : dirs)
-					mark(x, y, d);
-			}
-			else if (num == 5)
-			{
-				int dirs[] = { 0, 1, 2, 3 };
-				for (int d : dirs)
-					mark(x, y, d);
-			}
+			if (board[sr + r][sc + c] + ns[r][c] > 1)
+				return false;
 		}
 
-		int cnt = 0;
-		for (int i = 0; i < N; ++i)
-			for (int j = 0; j < M; ++j)
-				if (dup[i][j] == 0)
-					++cnt;
-		ans = min(ans, cnt);
-		return;
-	}
+	return true;
+}
 
-	for (int i = 0; i < 4; ++i)
+bool paste(int nR, int nC)
+{
+	for (int i = 0; i < N; ++i)
 	{
-		int x, y, num;
-		tie(x, y, num) = cctvs[k];
-		chosen[k] = { x, y, num, i };
-		func(k + 1);
+		for (int j = 0; j < M; ++j)
+		{
+			if (!check(nR, nC, i, j))
+				continue;
+
+			for (int r = 0; r < nR; ++r)
+				for (int c = 0; c < nC; ++c)
+					board[i + r][j + c] += ns[r][c];
+			return true;
+		}
 	}
+	return false;
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
-	for (int i = 0; i < N; ++i)
+	cin >> N >> M >> K;
+	while (K--)
 	{
-		for (int j = 0; j < M; ++j)
+		cin >> R >> C;
+		for (int r = 0; r < R; ++r)
+			for (int c = 0; c < C; ++c)
+				cin >> s[r][c];
+
+		for (int r = 0; r < R; ++r)
+			for (int c = 0; c < C; ++c)
+				ns[r][c] = s[r][c];
+		int nR = R;
+		int nC = C;
+
+		for (int dir = 0; dir < 4; ++dir)
 		{
-			cin >> board[i][j];
-			if (board[i][j] > 0 && board[i][j] < 6)
-				cctvs.push_back({ i, j, board[i][j] });
+			if (dir != 0)
+			{
+				for (int r = nR - 1; r >= 0; --r)
+					for (int c = 0; c < nC; ++c)
+						ns[c][nR - 1 - r] = s[r][c];
+				swap(nR, nC);
+			}
+
+			// check and paste
+			if (paste(nR, nC))
+				break;
+
+			for (int r = 0; r < nR; ++r)
+				for (int c = 0; c < nC; ++c)
+					s[r][c] = ns[r][c];
 		}
 	}
 
-	func(0);
+	int ans = 0;
+	for (int i = 0; i < N; ++i)
+		for (int j = 0; j < M; ++j)
+			if (board[i][j] == 1)
+				++ans;
 	cout << ans;
 }
