@@ -1,51 +1,57 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-int board[52][52];
-vector<pair<int, int>> chs;
-vector<pair<int, int>> house;
-int ans = 0x7fffffff;
+int N, W, L;
+int tr[1002];
+int br[1002];
+
+bool IsBrEmpty()
+{
+	for (int i = 0; i < W; ++i)
+		if (br[i])
+			return false;
+	return true;
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
+	cin >> N >> W >> L;
 	for (int i = 0; i < N; ++i)
-	{
-		for (int j = 0; j < N; ++j)
-		{
-			cin >> board[i][j];
-			if (board[i][j] == 2)
-				chs.push_back({ i, j });
-			else if (board[i][j] == 1)
-				house.push_back({ i, j });
-		}
-	}
+		cin >> tr[i];
 
-	// 1이 M개, 나머지는 0 => 1일 때 뽑은놈
-	vector<int> temp(chs.size(), 1);
-	fill(temp.begin(), temp.begin() + chs.size() - M, 0);
-
+	int cur = 0;
+	int tot = 0;
+	int time = 0;
 	do
 	{
-		int tot = 0;
-		for (pair<int, int>& h : house)
+		// move
+		for (int i = W - 1; i >= 0; --i)
 		{
-			int mn = 0x7fffffff;
-			for (int i = 0; i < chs.size(); ++i)
+			if (br[i])
 			{
-				if (temp[i] == 1)
-				{
-					int length = abs(h.first - chs[i].first) + abs(h.second - chs[i].second);
-					mn = min(mn, length);
-				}
+				if (i + 1 >= W)
+					tot -= br[i];
+				else
+					br[i + 1] = br[i];
+				br[i] = 0;
 			}
-			tot += mn;
 		}
-		ans = min(ans, tot);
-	} while (next_permutation(temp.begin(), temp.end()));
 
-	cout << ans;
-}	
+		// add
+		if (cur < N && tot + tr[cur] <= L)
+		{
+			if (!br[0])
+			{
+				br[0] = tr[cur];
+				tot += tr[cur];
+				++cur;
+			}
+		}
+
+		++time;
+	} while (cur <= N && !IsBrEmpty());
+
+	cout << time;
+}
