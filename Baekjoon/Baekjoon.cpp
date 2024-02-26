@@ -1,43 +1,58 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-bool a[30][30];
-int ans;
-
-bool Nemo(int i, int j)
-{
-	bool inRange = i - 1 >= 0 && j - 1 >= 0;
-	return inRange && a[i - 1][j] && a[i][j - 1] && a[i - 1][j - 1];
-}
-
-void func(int i, int j)
-{
-	if (i == N - 1 && j == M)
-	{
-		++ans;
-		return;
-	}
-
-	if (j == M)
-	{
-		j = 0;
-		++i;
-	}
-
-	a[i][j] = 1;
-	if (!Nemo(i, j))
-		func(i, j + 1);
-	a[i][j] = 0;
-	func(i, j + 1);
-}
+int N, K;
+priority_queue<int, vector<int>> pq[13];
+int a[13];
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	cin >> N >> M;
+	cin >> N >> K;
+	for (int i = 0; i < N; ++i)
+	{
+		int a, b;
+		cin >> a >> b;
+		pq[a].push(b);
+	}
 
-	func(0, 0);
+	for (int i = 1; i <= K; ++i)
+	{
+		for (int p = 1; p <= 11; ++p)
+		{
+			if (pq[p].empty())
+				continue;
+
+			if (a[p] < pq[p].top())
+			{
+				int t = a[p];
+				a[p] = pq[p].top();
+				pq[p].pop();
+				pq[p].push(t);
+			}
+		}
+
+		for (int p = 1; p <= 11; ++p)
+			a[p] = max(0, a[p] - 1);
+
+		for (int p = 1; p <= 11; ++p)
+		{
+			if (pq[p].empty())
+				continue;
+
+			if (a[p] < pq[p].top())
+			{
+				int t = a[p];
+				a[p] = pq[p].top();
+				pq[p].pop();
+				pq[p].push(t);
+			}
+		}
+	}
+
+	int ans = 0;
+	for (int p = 1; p <= 11; ++p)
+		ans += a[p];
 	cout << ans;
 }
