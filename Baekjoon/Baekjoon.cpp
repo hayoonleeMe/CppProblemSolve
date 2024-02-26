@@ -1,61 +1,43 @@
 ﻿#include <bits/stdc++.h>
 using namespace std;
 
-const int R = 2;
-const int L = 6;
-
-string t[5];
+int N, M;
+bool a[30][30];
 int ans;
+
+bool Nemo(int i, int j)
+{
+	bool inRange = i - 1 >= 0 && j - 1 >= 0;
+	return inRange && a[i - 1][j] && a[i][j - 1] && a[i - 1][j - 1];
+}
+
+void func(int i, int j)
+{
+	if (i == N - 1 && j == M)
+	{
+		++ans;
+		return;
+	}
+
+	if (j == M)
+	{
+		j = 0;
+		++i;
+	}
+
+	a[i][j] = 1;
+	if (!Nemo(i, j))
+		func(i, j + 1);
+	a[i][j] = 0;
+	func(i, j + 1);
+}
 
 int main()
 {
 	ios_base::sync_with_stdio(0); cin.tie(0);
 
-	for (int i = 1; i <= 4; ++i)
-		cin >> t[i];
-	int T;
-	cin >> T;
-	while (T--)
-	{
-		int n, d;
-		cin >> n >> d;
+	cin >> N >> M;
 
-		int dir[5] = { 0, };
-		dir[n] = d;
-
-		// 우측
-		for (int r = n + 1; r <= 4; ++r)
-		{
-			if (t[r - 1][R] != t[r][L])
-				dir[r] = dir[r - 1] * -1;
-			else
-				break;
-		}
-
-		// 좌측
-		for (int l = n - 1; l >= 1; --l)
-		{
-			if (t[l + 1][L] != t[l][R])
-				dir[l] = dir[l + 1] * -1;
-			else
-				break;
-		}
-
-		// 회전
-		for (int i = 1; i <= 4; ++i)
-		{
-			if (dir[i] == 1)
-				rotate(t[i].begin(), t[i].begin() + 7, t[i].end());
-			else if (dir[i] == -1)
-				rotate(t[i].begin(), t[i].begin() + 1, t[i].end());
-		}
-	}
-
-	for (int i = 1; i <= 4; ++i)
-	{
-		int m = (int)(t[i][0] - '0') << (i - 1);
-		ans += m;
-	}
-
+	func(0, 0);
 	cout << ans;
 }
